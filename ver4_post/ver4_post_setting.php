@@ -39,7 +39,7 @@ if (isset($_GET['save'])){
 	</div>
 	<br>
 	<div class="input-group">
-		<span class="input-group-addon">图灵机器人APIKEY</span>
+		<span class="input-group-addon">图灵机器人APIKEY(未使用)</span>
 		<input type="text" class="form-control" name="key" placeholder="输入你在图灵官网得到的APIKEY" value="<?= option::get('ver4_post_apikey') ?>">
 	</div>
 	<br>
