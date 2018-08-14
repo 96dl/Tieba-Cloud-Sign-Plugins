@@ -617,7 +617,7 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 	<br><br><br>
 	<h4>添加回帖内容</h4>
 	<br>
-	<p>回帖时随机使用其中之一，不添加的话会自动调用图灵机器人API获取灌水内容</p>
+	<p>回帖时随机使用其中之一，不添加的话会自动从句子迷获取灌水内容</p>
 	<table class="table table-striped">
 		<thead>
 		<tr>
