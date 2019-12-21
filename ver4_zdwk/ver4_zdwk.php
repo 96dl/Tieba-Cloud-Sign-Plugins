@@ -34,10 +34,10 @@ function zdsign($bduss)
 }*/
 
 /*function wksign($bduss){
-	$head = array();
-	$head[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36';
-	$head[] = 'Referer: http://wenku.baidu.com/task/browse/daily';
-	$c = new wcurl('http://wenku.baidu.com/task/submit/signin',$head);
-	$c->addCookie('BDUSS=' . $bduss);
-	$c->get();
+    $head = array();
+    $head[] = 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36';
+    $head[] = 'Referer: http://wenku.baidu.com/task/browse/daily';
+    $c = new wcurl('http://wenku.baidu.com/task/submit/signin',$head);
+    $c->addCookie('BDUSS=' . $bduss);
+    $c->get();
 }*/

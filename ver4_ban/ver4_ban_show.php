@@ -1,13 +1,13 @@
 <?php if (!defined('SYSTEM_ROOT')) {
-	die('Insufficient Permissions');
+    die('Insufficient Permissions');
 }
 loadhead();
 global $m;
 $uid = UID;
 $b = $m->fetch_array($m->query("SELECT count(id) AS `c`FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}"));
 if ($b['c'] < 1) {
-	echo '<div class="alert alert-warning">您需要先绑定至少一个百度ID才可以使用本功能</div>';
-	die;
+    echo '<div class="alert alert-warning">您需要先绑定至少一个百度ID才可以使用本功能</div>';
+    die;
 }
 
 ?>
@@ -15,102 +15,102 @@ if ($b['c'] < 1) {
 <br>
 <?php
 if (isset($_GET['success'])) {
-	echo '<div class="alert alert-success">' . htmlspecialchars($_GET['success']) . '</div>';
+    echo '<div class="alert alert-success">' . htmlspecialchars($_GET['success']) . '</div>';
 }
 if (isset($_GET['error'])) {
-	echo '<div class="alert alert-danger">' . htmlspecialchars($_GET['error']) . '</div>';
+    echo '<div class="alert alert-danger">' . htmlspecialchars($_GET['error']) . '</div>';
 }
 
 $us = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_userset` WHERE `uid` = {$uid}"));
 
 if (isset($_GET['save'])) {
-	$con = isset($_POST['ban_c']) ? sqladds($_POST['ban_c']) : '';
-	$open = isset($_POST['open']) ? $_POST['open'] : 0;
-	if (!empty($open)) {
-		option::uset('ver4_ban_open', 1, $uid);
-	} else {
-		option::uset('ver4_ban_open', 0, $uid);
-	}
-	if (empty($us['uid'])) {
-		$m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_userset` (`uid`,`c`) VALUES ({$uid},'{$con}')");
-	} else {
-		$m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_userset` SET `c` = '{$con}' WHERE `uid` = {$uid}");
-	}
-	redirect('index.php?plugin=ver4_ban&success=' . urlencode('您的设置已成功保存'));
+    $con = isset($_POST['ban_c']) ? sqladds($_POST['ban_c']) : '';
+    $open = isset($_POST['open']) ? $_POST['open'] : 0;
+    if (!empty($open)) {
+        option::uset('ver4_ban_open', 1, $uid);
+    } else {
+        option::uset('ver4_ban_open', 0, $uid);
+    }
+    if (empty($us['uid'])) {
+        $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_userset` (`uid`,`c`) VALUES ({$uid},'{$con}')");
+    } else {
+        $m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_userset` SET `c` = '{$con}' WHERE `uid` = {$uid}");
+    }
+    redirect('index.php?plugin=ver4_ban&success=' . urlencode('您的设置已成功保存'));
 }
 
 if (isset($_GET['duser'])) {
-	$id = isset($_GET['id']) ? sqladds($_GET['id']) : '';
-	if (!empty($id)) {
-		global $m;
-		$m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `id` = '{$id}' AND `uid` = {$uid}");
-		redirect('index.php?plugin=ver4_ban&success=' . urlencode('已成功删除该被封禁ID，最迟24小时后该ID不会再被封禁！'));
-	} else {
-		redirect('index.php?plugin=ver4_ban&error=' . urlencode('ID不合法'));
-	}
+    $id = isset($_GET['id']) ? sqladds($_GET['id']) : '';
+    if (!empty($id)) {
+        global $m;
+        $m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `id` = '{$id}' AND `uid` = {$uid}");
+        redirect('index.php?plugin=ver4_ban&success=' . urlencode('已成功删除该被封禁ID，最迟24小时后该ID不会再被封禁！'));
+    } else {
+        redirect('index.php?plugin=ver4_ban&error=' . urlencode('ID不合法'));
+    }
 }
 if (isset($_GET['dauser'])) {
-	global $m;
-	$m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `uid` = {$uid}");
-	redirect('index.php?plugin=ver4_ban&success=' . urlencode('循环云封禁列表已成功清空！'));
+    global $m;
+    $m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `uid` = {$uid}");
+    redirect('index.php?plugin=ver4_ban&success=' . urlencode('循环云封禁列表已成功清空！'));
 }
 if (isset($_GET['newuser'])) {
-	$pid = isset($_POST['pid']) ? sqladds($_POST['pid']) : '';
-	$user = isset($_POST['user']) ? sqladds($_POST['user']) : '';
-	$tieba = isset($_POST['tieba']) ? sqladds($_POST['tieba']) : '';
+    $pid = isset($_POST['pid']) ? sqladds($_POST['pid']) : '';
+    $user = isset($_POST['user']) ? sqladds($_POST['user']) : '';
+    $tieba = isset($_POST['tieba']) ? sqladds($_POST['tieba']) : '';
 
-	$rts = isset($_POST['rts']) && !empty($_POST['rts']) ? sqladds($_POST['rts']) : date('Y-m-d');
-	$rte = isset($_POST['rte']) ? sqladds($_POST['rte']) : '2026-12-31';
+    $rts = isset($_POST['rts']) && !empty($_POST['rts']) ? sqladds($_POST['rts']) : date('Y-m-d');
+    $rte = isset($_POST['rte']) ? sqladds($_POST['rte']) : '2026-12-31';
 
-	$sy = (int)substr($rts, 0, 4);//取得年份
-	$sm = (int)substr($rts, 5, 2);//取得月份
-	$sd = (int)substr($rts, 8, 2);//取得几号
-	$stime = mktime(0, 0, 0, $sm, $sd, $sy);
+    $sy = (int)substr($rts, 0, 4);//取得年份
+    $sm = (int)substr($rts, 5, 2);//取得月份
+    $sd = (int)substr($rts, 8, 2);//取得几号
+    $stime = mktime(0, 0, 0, $sm, $sd, $sy);
 
-	$ey = (int)substr($rte, 0, 4);//取得年份
-	$em = (int)substr($rte, 5, 2);//取得月份
-	$ed = (int)substr($rte, 8, 2);//取得几号
-	$etime = mktime(0, 0, 0, $em, $ed, $ey);
+    $ey = (int)substr($rte, 0, 4);//取得年份
+    $em = (int)substr($rte, 5, 2);//取得月份
+    $ed = (int)substr($rte, 8, 2);//取得几号
+    $etime = mktime(0, 0, 0, $em, $ed, $ey);
 
-	if (empty($pid) || empty($user) || empty($tieba)) {
-		redirect('index.php?plugin=ver4_ban&error=' . urlencode('信息不完整，添加失败！'));
-	}
+    if (empty($pid) || empty($user) || empty($tieba)) {
+        redirect('index.php?plugin=ver4_ban&error=' . urlencode('信息不完整，添加失败！'));
+    }
 
-	if ($stime > 1988150400 || $etime > 1988150400 || $stime < 0 || $etime < 0) {
-		redirect('index.php?plugin=ver4_ban&error=' . urlencode('开始或者结束时间格式不正确！'));
-	}
+    if ($stime > 1988150400 || $etime > 1988150400 || $stime < 0 || $etime < 0) {
+        redirect('index.php?plugin=ver4_ban&error=' . urlencode('开始或者结束时间格式不正确！'));
+    }
 
-	if (date('Y-m-d', $stime) != $rts || date('Y-m-d', $etime) != $rte) {
-		redirect('index.php?plugin=ver4_ban&error=' . urlencode('开始或者结束时间格式不正确！'));
-	}
+    if (date('Y-m-d', $stime) != $rts || date('Y-m-d', $etime) != $rte) {
+        redirect('index.php?plugin=ver4_ban&error=' . urlencode('开始或者结束时间格式不正确！'));
+    }
 
-	if ($stime > $etime) {
-		redirect('index.php?plugin=ver4_ban&error=' . urlencode('开始时间不能大于结束时间！'));
-	}
+    if ($stime > $etime) {
+        redirect('index.php?plugin=ver4_ban&error=' . urlencode('开始时间不能大于结束时间！'));
+    }
 
-	global $m;
-	$p = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `id` = '{$pid}'"));
-	if ($p['uid'] != UID) {
-		redirect('index.php?plugin=ver4_ban&error=' . urlencode('你不能替他人添加帖子'));
-	}
+    global $m;
+    $p = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `id` = '{$pid}'"));
+    if ($p['uid'] != UID) {
+        redirect('index.php?plugin=ver4_ban&error=' . urlencode('你不能替他人添加帖子'));
+    }
 
-	$limit = option::get('ver4_ban_limit');
-	$t = $m->fetch_array($m->query("SELECT count(id) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `uid` = {$uid}"));
-	if ($t['c'] >= $limit) {
-		redirect('index.php?plugin=ver4_ban&error=' . urlencode("站点设置上限添加{$limit}个百度ID"));
-	}
-	$ru = explode("\n", $user);
-	foreach ($ru as $k => $v) {
-		$v = str_replace("\n",'',$v);
-		$v = str_replace("\r",'',$v);
-		$v = str_replace('@', '', $v);
-		$v = str_replace(' ', '', $v);
-		$t = $m->fetch_array($m->query("SELECT count(id) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `uid` = {$uid}"));
-		if ($t['c'] < $limit && !empty($v)) {
-			$m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` (`uid`,`pid`,`name`,`tieba`,`stime`,`etime`,`date`) VALUES ({$uid},'{$pid}','{$v}','{$tieba}','{$stime}','{$etime}',0)");
-		}
-	}
-	redirect('index.php?plugin=ver4_ban&success=' . urlencode('所有ID已添加到封禁列表，如超出限制会自动舍弃，系统稍后会进行封禁~~哇咔咔'));
+    $limit = option::get('ver4_ban_limit');
+    $t = $m->fetch_array($m->query("SELECT count(id) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `uid` = {$uid}"));
+    if ($t['c'] >= $limit) {
+        redirect('index.php?plugin=ver4_ban&error=' . urlencode("站点设置上限添加{$limit}个百度ID"));
+    }
+    $ru = explode("\n", $user);
+    foreach ($ru as $k => $v) {
+        $v = str_replace("\n", '', $v);
+        $v = str_replace("\r", '', $v);
+        $v = str_replace('@', '', $v);
+        $v = str_replace(' ', '', $v);
+        $t = $m->fetch_array($m->query("SELECT count(id) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `uid` = {$uid}"));
+        if ($t['c'] < $limit && !empty($v)) {
+            $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` (`uid`,`pid`,`name`,`tieba`,`stime`,`etime`,`date`) VALUES ({$uid},'{$pid}','{$v}','{$tieba}','{$stime}','{$etime}',0)");
+        }
+    }
+    redirect('index.php?plugin=ver4_ban&success=' . urlencode('所有ID已添加到封禁列表，如超出限制会自动舍弃，系统稍后会进行封禁~~哇咔咔'));
 }
 ?>
 <h4>基本设置</h4>
@@ -156,27 +156,27 @@ if (isset($_GET['newuser'])) {
 
 <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
 	<?php
-	$a = 0;
-	$bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-	?>
+    $a = 0;
+    $bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+    ?>
 	<ul id="myTabs" class="nav nav-tabs" role="tablist">
-		<?
-		while ($x = $m->fetch_array($bid)) {
-			?>
+		<?php
+        while ($x = $m->fetch_array($bid)) {
+            ?>
 			<li role="presentation" class="<?= empty($a) ? 'active' : '' ?>"><a href="#b<?= $x['id'] ?>" role="tab"
 			                                                                    data-toggle="tab"><?= $x['name'] ?></a>
 			</li>
-			<?
-			$a++;
-		}
-		?>
+			<?php
+            $a++;
+        }
+        ?>
 	</ul>
 	<div id="myTabContent" class="tab-content">
-		<?
-		$b = 0;
-		$bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-		while ($r = $m->fetch_array($bid)) {
-			?>
+		<?php
+        $b = 0;
+        $bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+        while ($r = $m->fetch_array($bid)) {
+            ?>
 			<div role="tabpanel" class="tab-pane fade <?= empty($b) ? 'active in' : '' ?>" id="b<?= $r['id'] ?>">
 				<table class="table table-striped">
 					<thead>
@@ -192,12 +192,11 @@ if (isset($_GET['newuser'])) {
 					</tr>
 					</thead>
 					<tbody>
-					<?
-					$a = 0;
-					$uu = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `pid` = {$r['id']}");
-					while ($r1 = $m->fetch_array($uu)) {
-						$a++;
-						?>
+					<?php
+                    $a = 0;
+            $uu = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `pid` = {$r['id']}");
+            while ($r1 = $m->fetch_array($uu)) {
+                $a++; ?>
 						<tr>
 							<td><?= $r1['id'] ?></td>
 							<td><a href="http://tieba.baidu.com/f?kw=<?= $r1['tieba'] ?>"
@@ -263,19 +262,18 @@ if (isset($_GET['newuser'])) {
 								</div><!-- /.modal-content -->
 							</div><!-- /.modal-dialog -->
 						</div><!-- /.modal -->
-						<?
-					}
-					if (empty($a)) {
-						echo '<tr><td>暂无需要封禁的用户</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
-					}
-					?>
+						<?php
+            }
+            if (empty($a)) {
+                echo '<tr><td>暂无需要封禁的用户</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+            } ?>
 					</tbody>
 				</table>
 			</div>
-			<?
-			$b++;
-		}
-		?>
+			<?php
+            $b++;
+        }
+        ?>
 	</div>
 </div>
 <a class="btn btn-success" href="javascript:;" data-toggle="modal" data-target="#AddUser">添加用户</a>
@@ -319,13 +317,13 @@ if (isset($_GET['newuser'])) {
 					<div class="input-group">
 						<span class="input-group-addon">请选择对应账号</span>
 						<select name="pid" required="" class="form-control">
-							<?
-							global $m;
-							$b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-							while ($x = $m->fetch_array($b)) {
-								echo '<option value="' . $x['id'] . '">' . $x['name'] . '</option>';
-							}
-							?>
+							<?php
+                            global $m;
+                            $b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+                            while ($x = $m->fetch_array($b)) {
+                                echo '<option value="' . $x['id'] . '">' . $x['name'] . '</option>';
+                            }
+                            ?>
 						</select>
 					</div>
 					<br>

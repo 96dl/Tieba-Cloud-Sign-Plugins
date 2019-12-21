@@ -10,10 +10,13 @@ Author URL: http://v4.hk
 For: V3.0+
 */
 
-if (!defined('SYSTEM_ROOT')) { die('Insufficient Permissions'); } 
-
-function ver4_style_ui() {
-	echo '<link rel="stylesheet" href="'.SYSTEM_URL.'plugins/ver4_style/css/ui.css">';
+if (!defined('SYSTEM_ROOT')) {
+    die('Insufficient Permissions');
 }
 
-addAction('header','ver4_style_ui');
+function ver4_style_ui()
+{
+    echo '<link rel="stylesheet" href="'.SYSTEM_URL.'plugins/ver4_style/css/ui.css">';
+}
+
+addAction('header', 'ver4_style_ui');

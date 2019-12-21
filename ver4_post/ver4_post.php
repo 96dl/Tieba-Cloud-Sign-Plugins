@@ -26,7 +26,8 @@ function randNum($n)
 /*
  * 从url中分离tid
  * */
-function getTid($url){
+function getTid($url)
+{
     preg_match('/\.com\/p\/(?<tid>\d+)/', $url, $tids);
     return $tids ['tid'];
 }
@@ -34,9 +35,12 @@ function getTid($url){
 /*
  * 贴吧post参数整合
  * */
-function getParameter($data){
+function getParameter($data)
+{
     $sign_str = '';
-    foreach ($data as $k => $v) $sign_str .= $k . '=' . $v;
+    foreach ($data as $k => $v) {
+        $sign_str .= $k . '=' . $v;
+    }
     $sign = strtoupper(md5($sign_str . 'tiebaclient!!!'));
     $data['sign'] = $sign;
     return $data;
@@ -45,18 +49,21 @@ function getParameter($data){
 /*
  * 根据BDUSS生成固定位数数字
  * */
-function findNum($str=''){
+function findNum($str='')
+{
     $str = sha1(md5($str));
     $str = trim($str);
-    if(empty($str)){return '';}
+    if (empty($str)) {
+        return '';
+    }
     $temp=array('1','2','3','4','5','6','7','8','9','0');
     $result='';
-    for($i=0;$i<strlen($str);$i++){
-        if(in_array($str[$i],$temp)){
+    for ($i=0;$i<strlen($str);$i++) {
+        if (in_array($str[$i], $temp)) {
             $result.=$str[$i];
         }
     }
-    if (strlen($result) < 10){
+    if (strlen($result) < 10) {
         return (int)$result + 1000000000;
     } else {
         return $result;
@@ -69,7 +76,7 @@ function findNum($str=''){
 function getFid($tname)
 {
     $x = wcurl::xget("http://tieba.baidu.com/i/data/get_fid_by_fname?fname={$tname}");
-    $r = json_decode($x,true);
+    $r = json_decode($x, true);
     return $r['data']['fid'];
 }
 
@@ -78,7 +85,8 @@ function getFid($tname)
  * 获取帖子详细内容
  * 返回fid、tid、tname、pname
  * */
-function getPage($tid){
+function getPage($tid)
+{
     $tl = new wcurl('http://c.tieba.baidu.com/c/f/pb/page');
     $data = array(
         '_client_type'    => 2,
@@ -92,7 +100,7 @@ function getPage($tid){
     );
     $tl->set(CURLOPT_RETURNTRANSFER, true);
     $rt = $tl->post(getParameter($data));
-    $result = json_decode($rt,true);
+    $result = json_decode($rt, true);
     $r = array(
         "fid"   => $result['forum']['id'],
         "tid"   => $tid,
@@ -106,7 +114,8 @@ function getPage($tid){
 /*
  * 获得帖子第一页内容
  * */
-function getFirstPageTid($name){
+function getFirstPageTid($name)
+{
     $tid = array();
     $tl = new wcurl('http://c.tieba.baidu.com/c/f/frs/page');
     $data = array(
@@ -125,7 +134,9 @@ function getFirstPageTid($name){
     $tl->set(CURLOPT_RETURNTRANSFER, true);
     $rt = $tl->post(getParameter($data));
     $result = json_decode($rt, true)['thread_list'];
-    foreach ($result as $v) $tid[] = $v['id'];
+    foreach ($result as $v) {
+        $tid[] = $v['id'];
+    }
     unset($tid[0],$tid[1],$tid[2]);
     return $tid;
 }
@@ -133,11 +144,12 @@ function getFirstPageTid($name){
 /*
  * 发表回复(支持楼中楼)
  * */
-function sendIt($b,$u,$t,$c){
+function sendIt($b, $u, $t, $c)
+{
     $tp = new wcurl('http://c.tieba.baidu.com/c/c/post/add');
     $data = array(
         'BDUSS'           => $b,
-        '_client_id'      => 'wappc_147' . substr(findNum($b),0,10) . '_' . substr(findNum($b),5,3),
+        '_client_id'      => 'wappc_147' . substr(findNum($b), 0, 10) . '_' . substr(findNum($b), 5, 3),
         '_client_type'    => $u['cat'] == 5 ? rand(1, 4) : $u['cat'],
         '_client_version' => '7.9.2',
         '_phone_imei'     => md5($b),
@@ -150,7 +162,7 @@ function sendIt($b,$u,$t,$c){
         'model'           => 'HUAWEI MT7-TL10',
         'new_vcode'       => 1,
         'quote_id'        => !empty($t['qid']) ? $t['qid'] : '',
-        'tbs'             => misc::getTbs(0,$b),
+        'tbs'             => misc::getTbs(0, $b),
         'tid'             => $t['tid'],
         'timestamp'       => time() . '516',
         'vcode_tag'       => 12,
@@ -158,19 +170,29 @@ function sendIt($b,$u,$t,$c){
     $tp->set(CURLOPT_RETURNTRANSFER, true);
     $rt = $tp->post(getParameter($data));
     $re = json_decode($rt, true);
-    if (!$re) return array(0, 'JSON 解析错误');
-    if ($re ['error_code'] == 0) return array(2, "使用第" . $u['cat'] . '种客户端发帖成功');
-    else if ($re ['error_code'] == 5) return array(5, "需要输入验证码，请检查你是否已经关注该贴吧。");
-    else if ($re ['error_code'] == 220034) return array(220034, "您的操作太频繁了！");
-    else if ($re ['error_code'] == 340016) return array(340016, "您已经被封禁");
-    else if ($re ['error_code'] == 232007) return array(232007, "您输入的内容不合法，请修改后重新提交。");
-    else return array($re ['error_code'], "未知错误，错误代码：" . $re ['error_code']);
+    if (!$re) {
+        return array(0, 'JSON 解析错误');
+    }
+    if ($re ['error_code'] == 0) {
+        return array(2, "使用第" . $u['cat'] . '种客户端发帖成功');
+    } elseif ($re ['error_code'] == 5) {
+        return array(5, "需要输入验证码，请检查你是否已经关注该贴吧。");
+    } elseif ($re ['error_code'] == 220034) {
+        return array(220034, "您的操作太频繁了！");
+    } elseif ($re ['error_code'] == 340016) {
+        return array(340016, "您已经被封禁");
+    } elseif ($re ['error_code'] == 232007) {
+        return array(232007, "您输入的内容不合法，请修改后重新提交。");
+    } else {
+        return array($re ['error_code'], "未知错误，错误代码：" . $re ['error_code']);
+    }
 }
 
 /*
  * 获取帖子指定楼层信息
  * */
-function getFloorInfo($tid,$pn,$floor){
+function getFloorInfo($tid, $pn, $floor)
+{
     $tl = new wcurl('http://c.tieba.baidu.com/c/f/pb/page');
     $data = array(
         '_client_type'    => 2,
@@ -184,10 +206,12 @@ function getFloorInfo($tid,$pn,$floor){
     );
     $tl->set(CURLOPT_RETURNTRANSFER, true);
     $rt = $tl->post(getParameter($data));
-    $result = json_decode($rt,true)['post_list'];
+    $result = json_decode($rt, true)['post_list'];
     $pid = 0;
-    foreach ($result as $v){
-        if ($v['floor'] == $floor) $pid = $v['id'];
+    foreach ($result as $v) {
+        if ($v['floor'] == $floor) {
+            $pid = $v['id'];
+        }
     }
     return $pid;
 }
@@ -195,9 +219,10 @@ function getFloorInfo($tid,$pn,$floor){
 /*
  * 获取图灵机器人内容
  * */
-function getTuLing(){
+function getTuLing()
+{
     $re = wcurl::xget('http://tuling123.tbsign.cn/index.php?mod=index');
-    $r = json_decode($re,true);
+    $r = json_decode($re, true);
     if ($r['code'] != 100000) {
         $content = getJuZiMi();
     } else {
@@ -210,7 +235,8 @@ function getTuLing(){
  * 从m.juzimi.com/ju获取随机内容
  * By n0099 四叶重工
  * */
-function getJuZiMi(){
+function getJuZiMi()
+{
     //Note7 (￣▽￣)~*
     $curl = new wcurl('http://m.juzimi.com/ju/', array('User-Agent: Mozilla/5.0 (Linux; Android 6.0; SM-N930F Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.81 Mobile Safari/537.36'));
     $curl -> set(CURLOPT_FOLLOWLOCATION, true);

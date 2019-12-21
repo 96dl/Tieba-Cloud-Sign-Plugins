@@ -1,6 +1,6 @@
 <?php
 if (!defined('SYSTEM_ROOT')) {
-	die('Insufficient Permissions');
+    die('Insufficient Permissions');
 }
 loadhead();
 
@@ -11,251 +11,269 @@ $all = option::get('ver4_post_all');
 
 $b = $m->fetch_array($m->query("SELECT count(id) AS `c`FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}"));
 if ($b['c'] < 1) {
-	echo '<div class="alert alert-warning">您需要先绑定至少一个百度ID才可以使用本功能</div>';
-	die;
+    echo '<div class="alert alert-warning">您需要先绑定至少一个百度ID才可以使用本功能</div>';
+    die;
 }
 ?>
 <h2>客户端回帖</h2>
 <br>
 <?php
 if (isset($_GET['success'])) {
-	echo '<div class="alert alert-success">' . htmlspecialchars($_GET['success']) . '</div>';
+    echo '<div class="alert alert-success">' . htmlspecialchars($_GET['success']) . '</div>';
 }
 if (isset($_GET['error'])) {
-	echo '<div class="alert alert-danger">' . htmlspecialchars($_GET['error']) . '</div>';
+    echo '<div class="alert alert-danger">' . htmlspecialchars($_GET['error']) . '</div>';
 }
 if (isset($_GET['save'])) {
-	$usl = isset($_POST['usl']) && is_numeric($_POST['usl']) ? sqladds($_POST['usl']) : 5;
-	$bcs = isset($_POST['ban_cs']) ? sqladds($_POST['ban_cs']) : '';
-	$bce = isset($_POST['ban_ce']) ? sqladds($_POST['ban_ce']) : '';
-	$open = isset($_POST['open']) ? $_POST['open'] : 0;
-	$randtime = isset($_POST['randtime']) ? $_POST['randtime'] : 0;
+    $usl = isset($_POST['usl']) && is_numeric($_POST['usl']) ? sqladds($_POST['usl']) : 5;
+    $bcs = isset($_POST['ban_cs']) ? sqladds($_POST['ban_cs']) : '';
+    $bce = isset($_POST['ban_ce']) ? sqladds($_POST['ban_ce']) : '';
+    $open = isset($_POST['open']) ? $_POST['open'] : 0;
+    $randtime = isset($_POST['randtime']) ? $_POST['randtime'] : 0;
 
-	if (!empty($open)) {
-		option::uset('ver4_post_open', 1, $uid);
-	} else {
-		option::uset('ver4_post_open', 0, $uid);
-	}
+    if (!empty($open)) {
+        option::uset('ver4_post_open', 1, $uid);
+    } else {
+        option::uset('ver4_post_open', 0, $uid);
+    }
 
-	if (!empty($randtime)) {
-		option::uset('ver4_post_randtime', 1, $uid);
-	} else {
-		option::uset('ver4_post_randtime', 0, $uid);
-	}
+    if (!empty($randtime)) {
+        option::uset('ver4_post_randtime', 1, $uid);
+    } else {
+        option::uset('ver4_post_randtime', 0, $uid);
+    }
 
-	if ($usl > 5 || $usl < 1) $usl = 5;//判断客户端选择范围
+    if ($usl > 5 || $usl < 1) {
+        $usl = 5;
+    }//判断客户端选择范围
 
-	$cc = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` WHERE `uid` = {$uid}"));
-	if (empty($cc['uid'])) {
-		$m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` (`uid`,`cat`,`cs`,`ce`) VALUES ({$uid},'{$usl}','{$bcs}','{$bce}')");
-	} else {
-		$m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` SET `cat` = '{$usl}',`cs` = '{$bcs}',`ce`='{$bce}' WHERE `uid` = {$uid}");
-	}
-	redirect('index.php?plugin=ver4_post&success=' . urlencode('您的设置已成功保存'));
+    $cc = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` WHERE `uid` = {$uid}"));
+    if (empty($cc['uid'])) {
+        $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` (`uid`,`cat`,`cs`,`ce`) VALUES ({$uid},'{$usl}','{$bcs}','{$bce}')");
+    } else {
+        $m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` SET `cat` = '{$usl}',`cs` = '{$bcs}',`ce`='{$bce}' WHERE `uid` = {$uid}");
+    }
+    redirect('index.php?plugin=ver4_post&success=' . urlencode('您的设置已成功保存'));
 }
 if (isset($_GET['newtiebaurl'])) {
-	$pid = isset($_POST['pid']) ? sqladds($_POST['pid']) : '';
-	$url = isset($_POST['tiebaurl']) ? sqladds($_POST['tiebaurl']) : '';
+    $pid = isset($_POST['pid']) ? sqladds($_POST['pid']) : '';
+    $url = isset($_POST['tiebaurl']) ? sqladds($_POST['tiebaurl']) : '';
 
-	$rts = isset($_POST['rts']) && is_numeric($_POST['rts']) ? sqladds($_POST['rts']) : 0;
-	$rte = isset($_POST['rte']) && is_numeric($_POST['rte']) ? sqladds($_POST['rte']) : 24;
+    $rts = isset($_POST['rts']) && is_numeric($_POST['rts']) ? sqladds($_POST['rts']) : 0;
+    $rte = isset($_POST['rte']) && is_numeric($_POST['rte']) ? sqladds($_POST['rte']) : 24;
 
-	$nqoute = isset($_POST['nqoute']) && is_numeric($_POST['nqoute']) ? sqladds($_POST['nqoute']) : 0;
-	$npage = isset($_POST['npage']) && is_numeric($_POST['npage']) ? sqladds($_POST['npage']) : 0;
+    $nqoute = isset($_POST['nqoute']) && is_numeric($_POST['nqoute']) ? sqladds($_POST['nqoute']) : 0;
+    $npage = isset($_POST['npage']) && is_numeric($_POST['npage']) ? sqladds($_POST['npage']) : 0;
 
-	$ptime = isset($_POST['time']) && is_numeric($_POST['time']) ? sqladds($_POST['time']) : 1;
-	$space = isset($_POST['space']) && is_numeric($_POST['space']) ? sqladds($_POST['space']) : 30;
+    $ptime = isset($_POST['time']) && is_numeric($_POST['time']) ? sqladds($_POST['time']) : 1;
+    $space = isset($_POST['space']) && is_numeric($_POST['space']) ? sqladds($_POST['space']) : 30;
 
-	global $m;
-	$p = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `id` = '{$pid}'"));
-	if ($p['uid'] != UID) redirect('index.php?plugin=ver4_post&error=' . urlencode('你不能替他人添加帖子'));
+    global $m;
+    $p = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `id` = '{$pid}'"));
+    if ($p['uid'] != UID) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('你不能替他人添加帖子'));
+    }
 
-	$up1 = $m->fetch_array($m->query("SELECT SUM(`all`) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = '{$pid}'"));
-	$ln = $all - $up1['c'];
+    $up1 = $m->fetch_array($m->query("SELECT SUM(`all`) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = '{$pid}'"));
+    $ln = $all - $up1['c'];
 
-	if ($ptime <= 0) redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您输入参数非法！'));
-	if ($ln < $ptime) redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您的剩余可用每日回复次数不足，添加失败！'));
-	$s = $m->fetch_array($m->query("SELECT count(id) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` WHERE `uid` = " . UID));
-	if ($s['c'] < 1) redirect('index.php?plugin=ver4_post&error=' . urlencode('你必须先完成基本设置'));
-	if ($space < 30) $space = 30;
+    if ($ptime <= 0) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您输入参数非法！'));
+    }
+    if ($ln < $ptime) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您的剩余可用每日回复次数不足，添加失败！'));
+    }
+    $s = $m->fetch_array($m->query("SELECT count(id) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` WHERE `uid` = " . UID));
+    if ($s['c'] < 1) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('你必须先完成基本设置'));
+    }
+    if ($space < 30) {
+        $space = 30;
+    }
 
 
-	if ($rts > $rte) {
-		$rt = $rts;
-		$rts = $rte;
-		$rte = $rt;
-	}
-	if (!empty($url)) {
-		$r = getPage(getTid($url));
-		if (!empty($r['fid'])) {
-			if (!empty($nqoute) && !empty($npage)) {
-				$qid = getFloorInfo($r['tid'], $npage, $nqoute);
-				if (empty($qid)) {
-					redirect('index.php?plugin=ver4_post&error=' . urlencode('楼层信息错误，没有获取到楼层ID！'));
-				} else {
-					$r['pname'] = "【{$nqoute}楼】" . $r['pname'];
-				}
-			} else {
-				$qid = 0;
-			}
-			$now = time();
-			$m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` (`uid`,`pid`,`fid`,`tid`,`qid`,`rts`,`rte`,`all`,`space`,`tname`,`pname`) VALUES (" . UID . ",'{$pid}','{$r['fid']}','{$r['tid']}','{$qid}','{$rts}','{$rte}','{$ptime}','{$space}','{$r['tname']}','{$r['pname']}')");
-			redirect('index.php?plugin=ver4_post&success=' . urlencode('帖子添加成功啦，静静的等待回复吧~~哇咔咔'));
-		} else {
-			redirect('index.php?plugin=ver4_post&error=' . urlencode('没有获取到帖子和贴吧信息'));
-		}
-	} else {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('您输入的URL不合法或者为空'));
-	}
-
+    if ($rts > $rte) {
+        $rt = $rts;
+        $rts = $rte;
+        $rte = $rt;
+    }
+    if (!empty($url)) {
+        $r = getPage(getTid($url));
+        if (!empty($r['fid'])) {
+            if (!empty($nqoute) && !empty($npage)) {
+                $qid = getFloorInfo($r['tid'], $npage, $nqoute);
+                if (empty($qid)) {
+                    redirect('index.php?plugin=ver4_post&error=' . urlencode('楼层信息错误，没有获取到楼层ID！'));
+                } else {
+                    $r['pname'] = "【{$nqoute}楼】" . $r['pname'];
+                }
+            } else {
+                $qid = 0;
+            }
+            $now = time();
+            $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` (`uid`,`pid`,`fid`,`tid`,`qid`,`rts`,`rte`,`all`,`space`,`tname`,`pname`) VALUES (" . UID . ",'{$pid}','{$r['fid']}','{$r['tid']}','{$qid}','{$rts}','{$rte}','{$ptime}','{$space}','{$r['tname']}','{$r['pname']}')");
+            redirect('index.php?plugin=ver4_post&success=' . urlencode('帖子添加成功啦，静静的等待回复吧~~哇咔咔'));
+        } else {
+            redirect('index.php?plugin=ver4_post&error=' . urlencode('没有获取到帖子和贴吧信息'));
+        }
+    } else {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('您输入的URL不合法或者为空'));
+    }
 }
 
 if (isset($_GET['newtiebaname'])) {
-	$pid = isset($_POST['pid']) ? sqladds($_POST['pid']) : '';
-	$tname = isset($_POST['tname']) ? sqladds($_POST['tname']) : '';
+    $pid = isset($_POST['pid']) ? sqladds($_POST['pid']) : '';
+    $tname = isset($_POST['tname']) ? sqladds($_POST['tname']) : '';
 
-	$rts = isset($_POST['rts']) && is_numeric($_POST['rts']) ? sqladds($_POST['rts']) : 0;
-	$rte = isset($_POST['rte']) && is_numeric($_POST['rte']) ? sqladds($_POST['rte']) : 24;
+    $rts = isset($_POST['rts']) && is_numeric($_POST['rts']) ? sqladds($_POST['rts']) : 0;
+    $rte = isset($_POST['rte']) && is_numeric($_POST['rte']) ? sqladds($_POST['rte']) : 24;
 
-	$ptime = isset($_POST['time']) && is_numeric($_POST['time']) ? sqladds($_POST['time']) : 1;
-	$space = isset($_POST['space']) && is_numeric($_POST['space']) ? sqladds($_POST['space']) : 30;
+    $ptime = isset($_POST['time']) && is_numeric($_POST['time']) ? sqladds($_POST['time']) : 1;
+    $space = isset($_POST['space']) && is_numeric($_POST['space']) ? sqladds($_POST['space']) : 30;
 
-	global $m;
-	$p = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `id` = '{$pid}'"));
+    global $m;
+    $p = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `id` = '{$pid}'"));
 
-	if ($p['uid'] != UID) redirect('index.php?plugin=ver4_post&error=' . urlencode('你不能替他人添加贴吧'));
-	if ($ptime <= 0) redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您输入参数非法！'));
+    if ($p['uid'] != UID) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('你不能替他人添加贴吧'));
+    }
+    if ($ptime <= 0) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您输入参数非法！'));
+    }
 
-	$up2 = $m->fetch_array($m->query("SELECT SUM(`all`) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = '{$pid}'"));
-	$ln = $all - $up2['c'];
-	if ($ln < $ptime) redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您的剩余可用每日回复次数不足,添加失败！'));
+    $up2 = $m->fetch_array($m->query("SELECT SUM(`all`) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = '{$pid}'"));
+    $ln = $all - $up2['c'];
+    if ($ln < $ptime) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您的剩余可用每日回复次数不足,添加失败！'));
+    }
 
-	$s = $m->fetch_array($m->query("SELECT count(id) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` WHERE `uid` = " . UID));
-	if ($s['c'] < 1) redirect('index.php?plugin=ver4_post&error=' . urlencode('你必须先完成基本设置'));
+    $s = $m->fetch_array($m->query("SELECT count(id) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` WHERE `uid` = " . UID));
+    if ($s['c'] < 1) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('你必须先完成基本设置'));
+    }
 
-	if ($space < 30) $space = 30;
+    if ($space < 30) {
+        $space = 30;
+    }
 
-	if ($rts > $rte) {
-		$rt = $rts;
-		$rts = $rte;
-		$rte = $rt;
-	}
-	if (!empty($tname)) {
-		if (count(getFirstPageTid($tname)) > 0) {
-			$now = time();
-			$fid = getFid($tname);
-			$m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` (`uid`,`pid`,`fid`,`tid`,`rts`,`rte`,`all`,`space`,`tname`,`pname`) VALUES (" . UID . ",'{$pid}','{$fid}',0,'{$rts}','{$rte}','{$ptime}','{$space}','{$tname}',0)");
-			redirect('index.php?plugin=ver4_post&success=' . urlencode('贴吧添加成功啦，静静的等待回复吧~~哇咔咔'));
-		} else {
-			redirect('index.php?plugin=ver4_post&error=' . urlencode('没有获取到贴吧信息'));
-		}
-	} else {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('您输入的吧名不合法或者为空'));
-	}
-
+    if ($rts > $rte) {
+        $rt = $rts;
+        $rts = $rte;
+        $rte = $rt;
+    }
+    if (!empty($tname)) {
+        if (count(getFirstPageTid($tname)) > 0) {
+            $now = time();
+            $fid = getFid($tname);
+            $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` (`uid`,`pid`,`fid`,`tid`,`rts`,`rte`,`all`,`space`,`tname`,`pname`) VALUES (" . UID . ",'{$pid}','{$fid}',0,'{$rts}','{$rte}','{$ptime}','{$space}','{$tname}',0)");
+            redirect('index.php?plugin=ver4_post&success=' . urlencode('贴吧添加成功啦，静静的等待回复吧~~哇咔咔'));
+        } else {
+            redirect('index.php?plugin=ver4_post&error=' . urlencode('没有获取到贴吧信息'));
+        }
+    } else {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('您输入的吧名不合法或者为空'));
+    }
 }
 
 if (isset($_GET['newtiebacontent'])) {
-	$con = isset($_POST['content']) ? sqladds($_POST['content']) : '';
-	$tid = isset($_POST['tid']) && is_numeric($_POST['tid']) ? sqladds($_POST['tid']) : 0;
+    $con = isset($_POST['content']) ? sqladds($_POST['content']) : '';
+    $tid = isset($_POST['tid']) && is_numeric($_POST['tid']) ? sqladds($_POST['tid']) : 0;
 
-	global $m;
-	if (!empty($tid)) {
-		$tieba = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `id` = '{$tid}'"));
-		if ($tieba['uid'] != UID) {
-			redirect('index.php?plugin=ver4_post&error=' . urlencode('您不可以替他人添加内容'));
-		}
-	}
+    global $m;
+    if (!empty($tid)) {
+        $tieba = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `id` = '{$tid}'"));
+        if ($tieba['uid'] != UID) {
+            redirect('index.php?plugin=ver4_post&error=' . urlencode('您不可以替他人添加内容'));
+        }
+    }
 
-	if (!empty($con)) {
-		$rc = explode("\n", $con);
-		$now = time();
-		foreach ($rc as $v) {
-			$m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` (`uid`,`tid`,`content`,`date`) VALUES (" . UID . ",'{$tid}','{$v}',{$now})");
-		}
-		redirect('index.php?plugin=ver4_post&success=' . urlencode('内容添加成功啦，静静的等待出现在回复吧~~哇咔咔'));
-	} else {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('您输入的内容为空'));
-	}
-
+    if (!empty($con)) {
+        $rc = explode("\n", $con);
+        $now = time();
+        foreach ($rc as $v) {
+            $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` (`uid`,`tid`,`content`,`date`) VALUES (" . UID . ",'{$tid}','{$v}',{$now})");
+        }
+        redirect('index.php?plugin=ver4_post&success=' . urlencode('内容添加成功啦，静静的等待出现在回复吧~~哇咔咔'));
+    } else {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('您输入的内容为空'));
+    }
 }
 if (isset($_GET['deltiebaurl'])) {
-	global $m;
-	$m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `uid` = " . UID);
-	redirect('index.php?plugin=ver4_post&success=' . urlencode('帖子列表已被清空'));
+    global $m;
+    $m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `uid` = " . UID);
+    redirect('index.php?plugin=ver4_post&success=' . urlencode('帖子列表已被清空'));
 }
 if (isset($_GET['delallcontent'])) {
-	global $m;
-	$m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` WHERE `uid` = " . UID);
-	redirect('index.php?plugin=ver4_post&success=' . urlencode('内容列表已被清空'));
+    global $m;
+    $m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` WHERE `uid` = " . UID);
+    redirect('index.php?plugin=ver4_post&success=' . urlencode('内容列表已被清空'));
 }
 if (isset($_GET['delurl'])) {
-	$id = isset($_GET['id']) ? sqladds($_GET['id']) : '';
-	if (!empty($id)) {
-		global $m;
-		$m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `id` = '{$id}' AND `uid` = " . UID);
-		$m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` SET `tid` = 0 WHERE `tid` = '{$id}' AND `uid` = " . UID);
-		redirect('index.php?plugin=ver4_post&success=' . urlencode('已成功删除帖子地址'));
-	} else {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('ID不合法'));
-	}
+    $id = isset($_GET['id']) ? sqladds($_GET['id']) : '';
+    if (!empty($id)) {
+        global $m;
+        $m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `id` = '{$id}' AND `uid` = " . UID);
+        $m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` SET `tid` = 0 WHERE `tid` = '{$id}' AND `uid` = " . UID);
+        redirect('index.php?plugin=ver4_post&success=' . urlencode('已成功删除帖子地址'));
+    } else {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('ID不合法'));
+    }
 }
 if (isset($_GET['delcon'])) {
-	$id = isset($_GET['id']) ? sqladds($_GET['id']) : '';
-	if (!empty($id)) {
-		global $m;
-		$m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` WHERE `id` = '{$id}' AND `uid` = " . UID);
-		redirect('index.php?plugin=ver4_post&success=' . urlencode('已成功删除该内容'));
-	} else {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('ID不合法'));
-	}
+    $id = isset($_GET['id']) ? sqladds($_GET['id']) : '';
+    if (!empty($id)) {
+        global $m;
+        $m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` WHERE `id` = '{$id}' AND `uid` = " . UID);
+        redirect('index.php?plugin=ver4_post&success=' . urlencode('已成功删除该内容'));
+    } else {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('ID不合法'));
+    }
 }
 if (isset($_GET['cturl'])) {
-	$id = isset($_GET['id']) && is_numeric($_GET['id']) ? sqladds($_GET['id']) : '';
-	$rts = isset($_POST['rts']) && is_numeric($_POST['rts']) ? sqladds($_POST['rts']) : 0;
-	$rte = isset($_POST['rte']) && is_numeric($_POST['rte']) ? sqladds($_POST['rte']) : 24;
-	$ptime = isset($_POST['time']) && is_numeric($_POST['time']) ? sqladds($_POST['time']) : 1;
-	$space = isset($_POST['space']) && is_numeric($_POST['space']) ? sqladds($_POST['space']) : 60;
+    $id = isset($_GET['id']) && is_numeric($_GET['id']) ? sqladds($_GET['id']) : '';
+    $rts = isset($_POST['rts']) && is_numeric($_POST['rts']) ? sqladds($_POST['rts']) : 0;
+    $rte = isset($_POST['rte']) && is_numeric($_POST['rte']) ? sqladds($_POST['rte']) : 24;
+    $ptime = isset($_POST['time']) && is_numeric($_POST['time']) ? sqladds($_POST['time']) : 1;
+    $space = isset($_POST['space']) && is_numeric($_POST['space']) ? sqladds($_POST['space']) : 60;
 
-	if ($space < 60) {
-		$space = 60;
-	}
-	if ($rts > $rte) {
-		$rt = $rts;
-		$rts = $rte;
-		$rte = $rt;
-	}
+    if ($space < 60) {
+        $space = 60;
+    }
+    if ($rts > $rte) {
+        $rt = $rts;
+        $rts = $rte;
+        $rte = $rt;
+    }
 
-	$x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `id` = '{$id}'"));
-	$xc = $m->fetch_array($m->query("SELECT SUM(`all`) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `id` != '{$id}' AND `pid` = {$x['pid']}"));
-	$ln = $all - $xc['c'];
-	if ($ptime <= 0) {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您输入参数非法！'));
-	}
-	if ($ln < $ptime) {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，该百度ID剩余可用每日回复次数不足，修改失败！'));
-	}
-	if ($x['uid'] == UID) {
-		$m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` SET `rts` = '{$rts}',`rte` = '{$rte}',`space` = '{$space}',`all` = '{$ptime}' WHERE `id` = '{$id}'");
-		redirect('index.php?plugin=ver4_post&success=' . urlencode('已成功修改'));
-	} else {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('ID不合法'));
-	}
+    $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `id` = '{$id}'"));
+    $xc = $m->fetch_array($m->query("SELECT SUM(`all`) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `id` != '{$id}' AND `pid` = {$x['pid']}"));
+    $ln = $all - $xc['c'];
+    if ($ptime <= 0) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，您输入参数非法！'));
+    }
+    if ($ln < $ptime) {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('啊哦，该百度ID剩余可用每日回复次数不足，修改失败！'));
+    }
+    if ($x['uid'] == UID) {
+        $m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` SET `rts` = '{$rts}',`rte` = '{$rte}',`space` = '{$space}',`all` = '{$ptime}' WHERE `id` = '{$id}'");
+        redirect('index.php?plugin=ver4_post&success=' . urlencode('已成功修改'));
+    } else {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('ID不合法'));
+    }
 }
 if (isset($_GET['ctcon'])) {
-	$id = isset($_GET['id']) && is_numeric($_GET['id']) ? sqladds($_GET['id']) : '';
-	$con = isset($_POST['content']) ? sqladds($_POST['content']) : '';
-	$tid = isset($_POST['tid']) && is_numeric($_POST['tid']) ? sqladds($_POST['tid']) : 0;
+    $id = isset($_GET['id']) && is_numeric($_GET['id']) ? sqladds($_GET['id']) : '';
+    $con = isset($_POST['content']) ? sqladds($_POST['content']) : '';
+    $tid = isset($_POST['tid']) && is_numeric($_POST['tid']) ? sqladds($_POST['tid']) : 0;
 
-	global $m;
-	$x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` WHERE `id` = '{$id}'"));
-	if ($x['uid'] == UID) {
-		$m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` SET `tid` = '{$tid}',`content` = '{$con}' WHERE `id` = '{$id}'");
-		redirect('index.php?plugin=ver4_post&success=' . urlencode('已成功修改'));
-	} else {
-		redirect('index.php?plugin=ver4_post&error=' . urlencode('ID不合法'));
-	}
-
+    global $m;
+    $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` WHERE `id` = '{$id}'"));
+    if ($x['uid'] == UID) {
+        $m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` SET `tid` = '{$tid}',`content` = '{$con}' WHERE `id` = '{$id}'");
+        redirect('index.php?plugin=ver4_post&success=' . urlencode('已成功修改'));
+    } else {
+        redirect('index.php?plugin=ver4_post&error=' . urlencode('ID不合法'));
+    }
 }
 ?>
 <ul class="nav nav-tabs">
@@ -269,33 +287,33 @@ if (isset($_GET['ctcon'])) {
 	</li>
 </ul>
 <br>
-<? if (isset($_GET['r'])) { ?>
+<?php if (isset($_GET['r'])) { ?>
 	<h4>当天的回帖记录</h4>
 	<b>新添加帖子或者贴吧及次数修改第二天生效</b>
 	<br><br>
 	<div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
 		<?php
-		$a = 0;
-		$bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-		?>
+        $a = 0;
+        $bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+        ?>
 		<ul id="myTabs" class="nav nav-tabs" role="tablist">
-			<?
-			while ($x = $m->fetch_array($bid)) {
-				?>
+			<?php
+            while ($x = $m->fetch_array($bid)) {
+                ?>
 				<li role="presentation" class="<?= empty($a) ? 'active' : '' ?>"><a href="#b<?= $x['id'] ?>" role="tab"
 				                                                                    data-toggle="tab"><?= $x['name'] ?></a>
 				</li>
-				<?
-				$a++;
-			}
-			?>
+				<?php
+                $a++;
+            }
+            ?>
 		</ul>
 		<div id="myTabContent" class="tab-content">
-			<?
-			$b = 0;
-			$bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-			while ($r = $m->fetch_array($bid)) {
-				?>
+			<?php
+            $b = 0;
+            $bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+            while ($r = $m->fetch_array($bid)) {
+                ?>
 				<div role="tabpanel" class="tab-pane fade <?= empty($b) ? 'active in' : '' ?>" id="b<?= $r['id'] ?>">
 					<table class="table table-striped">
 						<thead>
@@ -310,12 +328,11 @@ if (isset($_GET['ctcon'])) {
 						</tr>
 						</thead>
 						<tbody>
-						<?
-						$a = 0;
-						$tt = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = {$r['id']}");
-						while ($r1 = $m->fetch_array($tt)) {
-							$a++;
-							?>
+						<?php
+                        $a = 0;
+                $tt = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = {$r['id']}");
+                while ($r1 = $m->fetch_array($tt)) {
+                    $a++; ?>
 							<tr>
 								<td><?= $r1['id'] ?></td>
 								<td><a href="http://tieba.baidu.com/f?kw=<?= $r1['tname'] ?>"
@@ -352,25 +369,24 @@ if (isset($_GET['ctcon'])) {
 									</div><!-- /.modal-content -->
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
-							<?
-						}
-						if (empty($a)) {
-							echo '<tr><td>暂无帖子</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
-						}
-						?>
+							<?php
+                }
+                if (empty($a)) {
+                    echo '<tr><td>暂无帖子</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+                } ?>
 						</tbody>
 					</table>
 				</div>
-				<?
-				$b++;
-			}
-			?>
+				<?php
+                $b++;
+            }
+            ?>
 		</div>
 	</div>
 	
-	<?
-}elseif(isset($_GET['n'])){
-	?>
+	<?php
+} elseif (isset($_GET['n'])) {
+                ?>
 	<h4>温馨提示</h4>
 	<br>
 	<p>
@@ -388,10 +404,9 @@ if (isset($_GET['ctcon'])) {
 		1、系统自动识别置顶帖并跳过
 	</p>
 	<?php
-}else {
-global $m;
-$x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` WHERE `uid` = " . UID));
-?>
+            } else {
+                global $m;
+                $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_userset` WHERE `uid` = " . UID)); ?>
 <h4>基本设置</h4>
 <br>
 <form action="index.php?plugin=ver4_post&save" method="post">
@@ -459,29 +474,26 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 	<br>
 	<div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
 		<?php
-		$a = 0;
-		$bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-		?>
+        $a = 0;
+                $bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}"); ?>
 		<ul id="myTabs" class="nav nav-tabs" role="tablist">
-			<?
-			while ($x = $m->fetch_array($bid)) {
-				$cb = $m->fetch_array($m->query("SELECT SUM(`all`) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = {$x['id']}"));
-				$have = $all - $cb['c'];
-				?>
+			<?php
+            while ($x = $m->fetch_array($bid)) {
+                $cb = $m->fetch_array($m->query("SELECT SUM(`all`) AS `c` FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = {$x['id']}"));
+                $have = $all - $cb['c']; ?>
 				<li role="presentation" class="<?= empty($a) ? 'active' : '' ?>">
 					<a href="#b<?= $x['id'] ?>" role="tab" data-toggle="tab"><?= $x['name'] . '(' . $have . '次)' ?></a>
 				</li>
-				<?
-				$a++;
-			}
-			?>
+				<?php
+                $a++;
+            } ?>
 		</ul>
 		<div id="myTabContent" class="tab-content">
-			<?
-			$b = 0;
-			$bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-			while ($r = $m->fetch_array($bid)) {
-				?>
+			<?php
+            $b = 0;
+                $bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+                while ($r = $m->fetch_array($bid)) {
+                    ?>
 				<div role="tabpanel" class="tab-pane fade <?= empty($b) ? 'active in' : '' ?>" id="b<?= $r['id'] ?>">
 					<table class="table table-striped">
 						<thead>
@@ -496,12 +508,11 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 						</tr>
 						</thead>
 						<tbody>
-						<?
-						$a = 0;
-						$tt = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = {$r['id']}");
-						while ($r1 = $m->fetch_array($tt)) {
-							$a++;
-							?>
+						<?php
+                        $a = 0;
+                    $tt = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `pid` = {$r['id']}");
+                    while ($r1 = $m->fetch_array($tt)) {
+                        $a++; ?>
 							<tr>
 								<td><?= $r1['id'] ?></td>
 								<td><?= $r1['rts'] . '-' . $r1['rte'] ?></td>
@@ -595,19 +606,17 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 									</div><!-- /.modal-content -->
 								</div><!-- /.modal-dialog -->
 							</div><!-- /.modal -->
-							<?
-						}
-						if (empty($a)) {
-							echo '<tr><td>暂无帖子</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
-						}
-						?>
+							<?php
+                    }
+                    if (empty($a)) {
+                        echo '<tr><td>暂无帖子</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+                    } ?>
 						</tbody>
 					</table>
 				</div>
-				<?
-				$b++;
-			}
-			?>
+				<?php
+                $b++;
+                } ?>
 		</div>
 	</div>
 
@@ -629,12 +638,11 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 		</tr>
 		</thead>
 		<tbody>
-		<?
-		$a = 0;
-		$cc = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` WHERE `uid` = " . UID);
-		while ($r2 = $m->fetch_array($cc)) {
-			$a++;
-			?>
+		<?php
+        $a = 0;
+                $cc = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_content` WHERE `uid` = " . UID);
+                while ($r2 = $m->fetch_array($cc)) {
+                    $a++; ?>
 			<tr>
 				<td><?= $r2['id'] ?></td>
 				<td><?= empty($r2['tid']) ? '全部' : $r2['tid'] ?></td>
@@ -658,14 +666,13 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 								<div class="input-group">
 									<span class="input-group-addon">选择帖子</span>
 									<select name="tid" required="" class="form-control">
-										<?
-										echo '<option value="0">针对全部帖子/贴吧随机</option>';
-										global $m;
-										$b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `uid` = " . UID);
-										while ($x = $m->fetch_array($b)) {
-											echo '<option ' . ($r2['tid'] == $x['id'] ? 'selected' : '') . ' value="' . $x['id'] . '">' . $x['pname'] . '</option>';
-										}
-										?>
+										<?php
+                                        echo '<option value="0">针对全部帖子/贴吧随机</option>';
+                    global $m;
+                    $b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `uid` = " . UID);
+                    while ($x = $m->fetch_array($b)) {
+                        echo '<option ' . ($r2['tid'] == $x['id'] ? 'selected' : '') . ' value="' . $x['id'] . '">' . $x['pname'] . '</option>';
+                    } ?>
 									</select>
 								</div>
 								<br>
@@ -702,12 +709,11 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 					</div><!-- /.modal-content -->
 				</div><!-- /.modal-dialog -->
 			</div><!-- /.modal -->
-			<?
-		}
-		if (empty($a)) {
-			echo '<tr><td>暂无内容</td><td></td><td></td><td></td><td></td><td></td></tr>';
-		}
-		?>
+			<?php
+                }
+                if (empty($a)) {
+                    echo '<tr><td>暂无内容</td><td></td><td></td><td></td><td></td><td></td></tr>';
+                } ?>
 
 		</tbody>
 	</table>
@@ -715,8 +721,9 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 	<a class="btn btn-danger" href="javascript:;" data-toggle="modal" data-target="#DelContent">清空列表</a>
 	<br>
 	<br>
-	<? } ?>
-	<? loadfoot() ?>
+	<?php
+            } ?>
+	<?php loadfoot() ?>
 	<div class="modal fade" id="AddTieba" tabindex="-1" role="dialog" aria-labelledby="AddTieba" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -731,13 +738,13 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 						<div class="input-group">
 							<span class="input-group-addon">请选择对应账号</span>
 							<select name="pid" required="" class="form-control">
-								<?
-								global $m;
-								$b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = " . UID);
-								while ($x = $m->fetch_array($b)) {
-									echo '<option value="' . $x['id'] . '">' . $x['name'] . '</option>';
-								}
-								?>
+								<?php
+                                global $m;
+                                $b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = " . UID);
+                                while ($x = $m->fetch_array($b)) {
+                                    echo '<option value="' . $x['id'] . '">' . $x['name'] . '</option>';
+                                }
+                                ?>
 							</select>
 						</div>
 						<br>
@@ -814,13 +821,13 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 						<div class="input-group">
 							<span class="input-group-addon">请选择对应账号</span>
 							<select name="pid" required="" class="form-control">
-								<?
-								global $m;
-								$b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = " . UID);
-								while ($x = $m->fetch_array($b)) {
-									echo '<option value="' . $x['id'] . '">' . $x['name'] . '</option>';
-								}
-								?>
+								<?php
+                                global $m;
+                                $b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = " . UID);
+                                while ($x = $m->fetch_array($b)) {
+                                    echo '<option value="' . $x['id'] . '">' . $x['name'] . '</option>';
+                                }
+                                ?>
 							</select>
 						</div>
 						<br>
@@ -908,13 +915,13 @@ $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX .
 							<span class="input-group-addon">选择帖子/贴吧</span>
 							<select name="tid" required="" class="form-control">
 								<option value="0">针对全部帖子/贴吧随机</option>
-								<?
-								global $m;
-								$b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `uid` = " . UID);
-								while ($x = $m->fetch_array($b)) {
-									echo '<option value="' . $x['id'] . '">' . (empty($x['pname']) ? $x['tname'] : $x['pname']) . '</option>';
-								}
-								?>
+								<?php
+                                global $m;
+                                $b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_post_tieba` WHERE `uid` = " . UID);
+                                while ($x = $m->fetch_array($b)) {
+                                    echo '<option value="' . $x['id'] . '">' . (empty($x['pname']) ? $x['tname'] : $x['pname']) . '</option>';
+                                }
+                                ?>
 							</select>
 						</div>
 						<br>

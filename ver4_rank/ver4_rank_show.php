@@ -1,63 +1,62 @@
 <?php if (!defined('SYSTEM_ROOT')) {
-	die('Insufficient Permissions');
+    die('Insufficient Permissions');
 }
 loadhead();
 global $m;
 $uid = UID;
 $b = $m->fetch_array($m->query("SELECT count(id) AS `c`FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}"));
 if ($b['c'] < 1) {
-	echo '<div class="alert alert-warning">您需要先绑定至少一个百度ID才可以使用本功能</div>';
-	die;
+    echo '<div class="alert alert-warning">您需要先绑定至少一个百度ID才可以使用本功能</div>';
+    die;
 }
 if (isset($_GET['save'])) {
-	$check = isset($_POST['c']) ? $_POST['c'] : '0';
-	if (!empty($check)) {
-		option::uset('ver4_rank_check', 1, $uid);
-	} else {
-		option::uset('ver4_rank_check', 0, $uid);
-	}
-	redirect('index.php?plugin=ver4_rank&success=' . urlencode('您的设置已成功保存'));
+    $check = isset($_POST['c']) ? $_POST['c'] : '0';
+    if (!empty($check)) {
+        option::uset('ver4_rank_check', 1, $uid);
+    } else {
+        option::uset('ver4_rank_check', 0, $uid);
+    }
+    redirect('index.php?plugin=ver4_rank&success=' . urlencode('您的设置已成功保存'));
 }
 if (isset($_GET['duser'])) {
-	$id = isset($_GET['id']) ? sqladds($_GET['id']) : '';
-	if (!empty($id)) {
-		global $m;
-		$m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `id` = '{$id}' AND `uid` = {$uid}");
-		redirect('index.php?plugin=ver4_rank&success=' . urlencode('已成功删除该名人！'));
-	} else {
-		redirect('index.php?plugin=ver4_rank&error=' . urlencode('ID不合法'));
-	}
+    $id = isset($_GET['id']) ? sqladds($_GET['id']) : '';
+    if (!empty($id)) {
+        global $m;
+        $m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `id` = '{$id}' AND `uid` = {$uid}");
+        redirect('index.php?plugin=ver4_rank&success=' . urlencode('已成功删除该名人！'));
+    } else {
+        redirect('index.php?plugin=ver4_rank&error=' . urlencode('ID不合法'));
+    }
 }
 if (isset($_GET['dauser'])) {
-	global $m;
-	$m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `uid` = {$uid}");
-	redirect('index.php?plugin=ver4_rank&success=' . urlencode('名人列表已成功清空！'));
+    global $m;
+    $m->query("DELETE FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `uid` = {$uid}");
+    redirect('index.php?plugin=ver4_rank&success=' . urlencode('名人列表已成功清空！'));
 }
 if (isset($_GET['newuser'])) {
-	$pid = isset($_POST['pid']) ? sqladds($_POST['pid']) : '';
-	$ck = isset($_POST['check']) ? sqladds($_POST['check']) : '';
+    $pid = isset($_POST['pid']) ? sqladds($_POST['pid']) : '';
+    $ck = isset($_POST['check']) ? sqladds($_POST['check']) : '';
 
-	$p = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `id` = '{$pid}'"));
-	if ($p['uid'] != UID) {
-		redirect('index.php?plugin=ver4_rank&error=' . urlencode('你不能替他人添加名人呦'));
-	}
+    $p = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `id` = '{$pid}'"));
+    if ($p['uid'] != UID) {
+        redirect('index.php?plugin=ver4_rank&error=' . urlencode('你不能替他人添加名人呦'));
+    }
 
-	if (!is_array($ck) || empty($ck)) {
-		redirect('index.php?plugin=ver4_rank&error=' . urlencode('数据非法，或者你没有选择名人，提交失败'));
-	}
+    if (!is_array($ck) || empty($ck)) {
+        redirect('index.php?plugin=ver4_rank&error=' . urlencode('数据非法，或者你没有选择名人，提交失败'));
+    }
 
-	foreach ($ck as $v) {
-		$x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_list` WHERE `id` = '{$v}'"));
-		if (!empty($x['name'])) {
-			$ux = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `pid` = '{$pid}' AND `name` = '{$x['name']}'"));
-			if (empty($ux['name'])) {
-				$m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` (`uid`,`pid`,`fid`,`nid`,`name`,`tieba`,`date`) 
+    foreach ($ck as $v) {
+        $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_list` WHERE `id` = '{$v}'"));
+        if (!empty($x['name'])) {
+            $ux = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `pid` = '{$pid}' AND `name` = '{$x['name']}'"));
+            if (empty($ux['name'])) {
+                $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` (`uid`,`pid`,`fid`,`nid`,`name`,`tieba`,`date`) 
 			VALUES ({$uid},'{$pid}','{$x['fid']}','{$x['nid']}','{$x['name']}','{$x['tieba']}',0)");
-			}
-		}
-	}
-	redirect('index.php?plugin=ver4_rank&success=' . urlencode('名人已成功添加！'));
-
+            }
+        }
+    }
+    redirect('index.php?plugin=ver4_rank&success=' . urlencode('名人已成功添加！'));
 }
 
 ?>
@@ -65,10 +64,10 @@ if (isset($_GET['newuser'])) {
 <br>
 <?php
 if (isset($_GET['success'])) {
-	echo '<div class="alert alert-success">' . htmlspecialchars($_GET['success']) . '</div>';
+    echo '<div class="alert alert-success">' . htmlspecialchars($_GET['success']) . '</div>';
 }
 if (isset($_GET['error'])) {
-	echo '<div class="alert alert-danger">' . htmlspecialchars($_GET['error']) . '</div>';
+    echo '<div class="alert alert-danger">' . htmlspecialchars($_GET['error']) . '</div>';
 }
 ?>
 <h4>基本设置</h4>
@@ -102,27 +101,27 @@ if (isset($_GET['error'])) {
 <br>
 <div class="bs-example bs-example-tabs" data-example-id="togglable-tabs">
 	<?php
-	$a = 0;
-	$bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-	?>
+    $a = 0;
+    $bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+    ?>
 	<ul id="myTabs" class="nav nav-tabs" role="tablist">
-		<?
-		while ($x = $m->fetch_array($bid)) {
-			?>
+		<?php
+        while ($x = $m->fetch_array($bid)) {
+            ?>
 			<li role="presentation" class="<?= empty($a) ? 'active' : '' ?>"><a href="#b<?= $x['id'] ?>" role="tab"
 			                                                                    data-toggle="tab"><?= $x['name'] ?></a>
 			</li>
-			<?
-			$a++;
-		}
-		?>
+			<?php
+            $a++;
+        }
+        ?>
 	</ul>
 	<div id="myTabContent" class="tab-content">
-		<?
-		$b = 0;
-		$bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-		while ($r = $m->fetch_array($bid)) {
-			?>
+		<?php
+        $b = 0;
+        $bid = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+        while ($r = $m->fetch_array($bid)) {
+            ?>
 			<div role="tabpanel" class="tab-pane fade <?= empty($b) ? 'active in' : '' ?>" id="b<?= $r['id'] ?>">
 				<table class="table table-striped">
 					<thead>
@@ -136,13 +135,12 @@ if (isset($_GET['error'])) {
 					</tr>
 					</thead>
 					<tbody>
-					<?
-					$a = 0;
-					$lr = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `pid` = {$r['id']} ORDER BY `id` DESC");
-					while ($x = $m->fetch_array($lr)) {
-						$a++;
-						$date = date('Y-m-d H:i:s', $x['date']);
-						?>
+					<?php
+                    $a = 0;
+            $lr = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `pid` = {$r['id']} ORDER BY `id` DESC");
+            while ($x = $m->fetch_array($lr)) {
+                $a++;
+                $date = date('Y-m-d H:i:s', $x['date']); ?>
 						<tr>
 							<td><?= $x['id'] ?></td>
 							<td><a href="http://tieba.baidu.com/f?kw=<?= $x['tieba'] ?>"
@@ -207,18 +205,17 @@ if (isset($_GET['error'])) {
 							</div><!-- /.modal-dialog -->
 						</div><!-- /.modal -->
 						<?php
-					}
-					if (empty($a)) {
-						echo "<tr><td>暂无助攻记录</td><td></td><td></td><td></td><td></td><td></td></tr>";
-					}
-					?>
+            }
+            if (empty($a)) {
+                echo "<tr><td>暂无助攻记录</td><td></td><td></td><td></td><td></td><td></td></tr>";
+            } ?>
 					</tbody>
 				</table>
 			</div>
-			<?
-			$b++;
-		}
-		?>
+			<?php
+            $b++;
+        }
+        ?>
 	</div>
 </div>
 <a class="btn btn-success" href="javascript:;" data-toggle="modal" data-target="#AddUser">添加名人</a>
@@ -240,13 +237,13 @@ if (isset($_GET['error'])) {
 					<div class="input-group">
 						<span class="input-group-addon">请选择对应账号</span>
 						<select name="pid" required="" class="form-control">
-							<?
-							global $m;
-							$b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
-							while ($x = $m->fetch_array($b)) {
-								echo '<option value="' . $x['id'] . '">' . $x['name'] . '</option>';
-							}
-							?>
+							<?php
+                            global $m;
+                            $b = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "baiduid` WHERE `uid` = {$uid}");
+                            while ($x = $m->fetch_array($b)) {
+                                echo '<option value="' . $x['id'] . '">' . $x['name'] . '</option>';
+                            }
+                            ?>
 						</select>
 					</div>
 					<br>
@@ -261,9 +258,9 @@ if (isset($_GET['error'])) {
 						</thead>
 						<tbody>
 						<?php
-						$r = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_list`");
-						while ($x = $m->fetch_array($r)) {
-							?>
+                        $r = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_list`");
+                        while ($x = $m->fetch_array($r)) {
+                            ?>
 							<tr>
 								<td><?= $x['id'] ?></td>
 								<td><a href="http://tieba.baidu.com/f?kw=<?= $x['tieba'] ?>"
@@ -275,8 +272,8 @@ if (isset($_GET['error'])) {
 								</td>
 							</tr>
 							<?php
-						}
-						?>
+                        }
+                        ?>
 						</tbody>
 					</table>
 				</div>

@@ -1,13 +1,15 @@
-<?php if (!defined('SYSTEM_ROOT')) {die('Insufficient Permissions');} ?>
+<?php if (!defined('SYSTEM_ROOT')) {
+    die('Insufficient Permissions');
+} ?>
 <h2>云封禁设置</h2>
 <br>
 <?php
-if (isset($_GET['msg'])){
-	echo '<div class="alert alert-success">'.htmlspecialchars($_GET['msg']).'</div>';
+if (isset($_GET['msg'])) {
+    echo '<div class="alert alert-success">'.htmlspecialchars($_GET['msg']).'</div>';
 }
-if (isset($_GET['save'])){
-	option::set('ver4_ban_limit',$_POST['limit']);
-	redirect('index.php?mod=admin:setplug&plug=ver4_ban&msg='.urlencode('设置已保存成功！'));
+if (isset($_GET['save'])) {
+    option::set('ver4_ban_limit', $_POST['limit']);
+    redirect('index.php?mod=admin:setplug&plug=ver4_ban&msg='.urlencode('设置已保存成功！'));
 }
 ?>
 <br>
