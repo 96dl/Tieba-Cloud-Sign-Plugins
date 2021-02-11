@@ -11,12 +11,12 @@ $max = $m->fetch_array($m->query("SELECT max(id) AS `c` FROM `" . DB_NAME . "`.`
 if ($id < $max['c']) {
     $ls = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `id` > {$id} AND {$sql} ORDER BY `id` ASC"));
     $us = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_userset` WHERE `uid` = {$ls['uid']}"));
-    $re = ban($ls['pid'], $ls['name'], $ls['tieba'], $us['c']);
+    $re = ver4_ban($ls['pid'], $ls['portrait'], $ls['tieba'], $us['c']);
     $re = json_decode($re, true);
-    if (!empty($re['un'])) {
-        $con = $ls['log'] . date('Y-m-d') . ' 执行结果：<font color="green">操作成功</font><br>';
+    if (!$re['error_code']) {
+        $con = $ls['log'] . date('Y-m-d H:m:s') . ' 执行结果：<font color="green">操作成功</font><br>';
     } else {
-        $con = $ls['log'] . date('Y-m-d') . ' 执行结果：<font color="red">操作失败</font><br>';
+        $con = $ls['log'] . date('Y-m-d H:m:s') . " 执行结果：<font color=\"red\">操作失败</font>#{$re["error_code"]} {$re["error_msg"]}}<br>";
     }
     $m->query("UPDATE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` SET `date` = {$time},`log` = '{$con}' WHERE `id` = {$ls['id']}");
     option::set('ver4_ban_id', $ls['id']);
