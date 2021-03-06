@@ -145,9 +145,7 @@ if (isset($_GET['error'])) {
 							<td><?= $x['id'] ?></td>
 							<td><a href="http://tieba.baidu.com/f?kw=<?= $x['tieba'] ?>"
 							       target="_blank"><?= $x['tieba'] ?></a></td>
-							<td><a href="http://tieba.baidu.com/home/main/?ie=utf-8&un=<?= $x['name'] ?>"
-							       target="_blank"><?= $x['name'] ?></a>
-							</td>
+							<td><?= $x['name'] ?></td>
 							<td><?= $date ?></td>
 							<td>
 								<a class="btn btn-info" href="javascript:;" data-toggle="modal"
@@ -265,8 +263,7 @@ if (isset($_GET['error'])) {
 								<td><?= $x['id'] ?></td>
 								<td><a href="http://tieba.baidu.com/f?kw=<?= $x['tieba'] ?>"
 								       target="_blank"><?= $x['tieba'] ?></a></td>
-								<td><a href="http://tieba.baidu.com/home/main/?ie=utf-8&un=<?= $x['name'] ?>"
-								       target="_blank"><?= $x['name'] ?></a></td>
+								<td><?= $x['name'] ?></td>
 								<td>
 									<input type="checkbox" name="check[]" value="<?= $x['id'] ?>">
 								</td>
