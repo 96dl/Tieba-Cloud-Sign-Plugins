@@ -10,7 +10,7 @@ if ($d != $day) {
     $m->query("TRUNCATE TABLE `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_list`");
     while (true) {
         $a++;
-        $uinfo = wcurl::xget("http://tieba.baidu.com/celebrity/submit/getNpcRank?pn={$a}");
+        $uinfo = wcurl::xget("http://tieba.baidu.com/celebrity/submit/getNpcRank?pn={$a}&ps=999");
         $ju = json_decode($uinfo, true);
         if (!empty($ju['no'])) {
             break;

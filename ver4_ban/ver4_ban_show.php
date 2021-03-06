@@ -69,12 +69,12 @@ if (isset($_GET['newuser'])) {
 
     $sy = (int)substr($rts, 0, 4);//取得年份
     $sm = (int)substr($rts, 5, 2);//取得月份
-    $sd = (int)substr($rts, 8, 2);//取得几号
+    $sd = (int)substr($rts, 8, 2);//取得日期
     $stime = mktime(0, 0, 0, $sm, $sd, $sy);
 
     $ey = (int)substr($rte, 0, 4);//取得年份
     $em = (int)substr($rte, 5, 2);//取得月份
-    $ed = (int)substr($rte, 8, 2);//取得几号
+    $ed = (int)substr($rte, 8, 2);//取得日期
     $etime = mktime(0, 0, 0, $em, $ed, $ey);
 
     if (empty($pid) || empty($user) || empty($tieba)) {
@@ -107,7 +107,7 @@ if (isset($_GET['newuser'])) {
     $ru = explode("\n", $user);
     $notExistList = "";
     foreach ($ru as $k => $v) {
-        $v = str_replace(["\n", "\r", '@', ' '], '', $v);
+        $v = trim(str_replace(["\r", '@'], '', $v));//去除特殊字符串
         //获取信息
         $banUserInfo = json_decode((new wcurl("https://tieba.baidu.com/home/get/panel?ie=utf-8&" . (preg_match('/^tb\.1\./', $v) ? "id={$v}" : "un={$v}")))->get(), true);
         if ($banUserInfo["no"] === 0) {
@@ -350,7 +350,9 @@ if (isset($_GET['newuser'])) {
                     </div>
                     <br>
                     <div class="input-group">
-                        <span class="input-group-addon">结束时间(日期)</span>
+                        <span class="input-group-addon">结束时间(日期)
+                            <input type="checkbox" aria-label="Auto end mode" id="AutoEndMode">
+                        </span>
                         <input type="text" class="form-control" name="rte" value="2026-12-31"
                                placeholder="日期格式：yyyy-mm-dd" required>
                     </div>
@@ -362,8 +364,8 @@ if (isset($_GET['newuser'])) {
                     </div>
                     <br>
                     <div class="modal-body">
-                        <textarea name="user" class="form-control" rows="10"
-                                  placeholder="输入待封禁的 用户名 或 Portrait，一行一个；用户名支持某些软件生成的例如：@AAA 格式，Portrait仅支持新版portrait，即 tb.1.xxx.xxxxx 格式"></textarea>
+                        <textarea id="banUserList" name="user" class="form-control" rows="10"
+                                  placeholder="输入待封禁的 用户名 或 Portrait，一行一个；用户名支持某些软件生成的例如：@AAA 格式 (自动清除@)，Portrait仅支持新版portrait，即 tb.1.xxx.xxxxx 格式，粘贴个人页链接会自动处理"></textarea>
                     </div>
             </div>
             <div class="modal-footer">
@@ -373,4 +375,18 @@ if (isset($_GET['newuser'])) {
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
+    <script>
+      $('#banUserList').bind('input propertychange', function(){
+        if($(this).val() != ""){
+          $(this).val(Array.from(new Set($(this).val().split("\n").map(x => {
+            x = x.replace(/@|\r/, "")
+            let testPortrait = /tb.1.[\w-~]{8}.[\w-~]{22}/.exec(x)//检测portrait
+            if (testPortrait !== null) {
+              x = testPortrait[0]
+            }
+            return x
+          }))).join("\n"))
+        }
+      })
+    </script>
 </div><!-- /.modal -->

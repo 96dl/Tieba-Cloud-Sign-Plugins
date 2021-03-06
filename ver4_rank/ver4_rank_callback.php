@@ -17,7 +17,7 @@ function callback_install()
 		  `tieba` varchar(255) NOT NULL,
 		  `date` int(10) NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+		) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 	");
     $m->query("
 		CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ver4_rank_log` (
@@ -31,7 +31,7 @@ function callback_install()
 		  `log` text,
 		  `date` int(10) NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+		) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 	");
 }
 

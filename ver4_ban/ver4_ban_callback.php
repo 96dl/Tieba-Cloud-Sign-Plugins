@@ -15,7 +15,7 @@ function callback_install()
           `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
           `name_show` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
           `portrait` varchar(40) CHARACTER SET utf8 NOT NULL,
-          `tieba` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+          `tieba` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
           `stime` int(10) NOT NULL,
           `etime` int(10) NOT NULL,
           `log` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
@@ -30,7 +30,7 @@ function callback_install()
           `uid` int(10) NOT NULL,
           `c` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
           PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+        ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
     ");
 }
 
