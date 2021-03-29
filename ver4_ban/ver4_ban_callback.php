@@ -7,31 +7,30 @@
 function callback_install()
 {
     global $m;
-    $m->query("
-        CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ver4_ban_list` (
-          `id` int(10) NOT NULL AUTO_INCREMENT,
-          `uid` int(10) NOT NULL,
-          `pid` int(10) NOT NULL,
-          `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-          `name_show` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-          `portrait` varchar(40) CHARACTER SET utf8 NOT NULL,
-          `tieba` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-          `stime` int(10) NOT NULL,
-          `etime` int(10) NOT NULL,
-          `log` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-          `date` int(10) NOT NULL DEFAULT '0',
-          PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-    ");
-    $m->query("
-        CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ver4_ban_userset` (
-          `id` int(10) NOT NULL AUTO_INCREMENT,
-          `uid` int(10) NOT NULL,
-          `c` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-          PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-    ");
+    $m->query('
+        CREATE TABLE `' . DB_PREFIX . 'tc_ver4_ban_list` (
+         `id` int NOT NULL AUTO_INCREMENT,
+         `uid` int NOT NULL,
+         `pid` int NOT NULL,
+         `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+         `name_show` text,
+         `portrait` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+         `tieba` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+         `stime` int NOT NULL,
+         `etime` int NOT NULL,
+         `log` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+         `date` int NOT NULL DEFAULT '0',
+         PRIMARY KEY (`id`)
+        ) CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+    ');
+    $m->query('
+        CREATE TABLE `' . DB_PREFIX . 'tc_ver4_ban_userset` (
+         `id` int NOT NULL AUTO_INCREMENT,
+         `uid` int NOT NULL,
+         `c` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+         PRIMARY KEY (`id`)
+        ) CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+    ');
 }
 
 /**
