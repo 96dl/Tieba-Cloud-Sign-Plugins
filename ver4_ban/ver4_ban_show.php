@@ -359,7 +359,7 @@ if (isset($_GET['newuser'])) {
                     <br>
                     <div class="input-group">
                         <span class="input-group-addon">贴吧</span>
-                        <input type="text" class="form-control" min="60" max="99999" name="tieba" placeholder="输入贴吧名"
+                        <input type="text" class="form-control" min="60" max="99999" name="tieba" placeholder="输入贴吧名（不带末尾吧字）"
                                required>
                     </div>
                     <br>
