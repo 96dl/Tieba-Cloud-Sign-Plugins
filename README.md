@@ -16,7 +16,7 @@ ALTER TABLE `tc_ver4_ban_list`
   CHANGE `tieba` `tieba` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   CHANGE `log` `log` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   ADD `name_show` TEXT NULL AFTER `name`,
-  ADD `portrait` TEXT NOT NULL AFTER `name_show`;
+  ADD `portrait` TEXT NULL AFTER `name_show`;
 UPDATE `tc_ver4_ban_list` SET `log` = REPLACE(`log`, "<br>", "<br>\n");
 ```
 其中 `tc_` 是默认表名前缀，如有过修改请自行修改表名前缀
