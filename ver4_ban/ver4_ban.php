@@ -18,22 +18,22 @@ addAction('navi_7', 'ver4_ban_nav');
 /*
  * 执行封禁操作
  * */
-function ver4_ban($pid, $portrait, $tieba, $reason, int $day = 1)
+function ver4_ban($pid, $portrait, $name, $tieba, $reason, int $day = 1)
 {
     $bduss = misc::getCookie($pid);
     $r = empty($reason) ? '您因为违反吧规，已被吧务封禁，如有疑问请联系吧务！' : $reason;
     $tl = new wcurl('http://c.tieba.baidu.com/c/c/bawu/commitprison');
     $data = array(
         'BDUSS'  => $bduss,
-        'day'    => $day,//1 7 10//封禁时长
+        'day'    => $day, // 1 7 10 封禁时长
         'fid'    => misc::getFid($tieba),
         'ntn'    => 'banid',
         'portrait' => $portrait,
         'reason' => $r,
         'tbs'    => misc::getTbs(0, $bduss),
-        'un'     => '',//$name,
+        'un'     => $name,
         'word'   => $tieba,
-        'z'      => 4623534287//随便打的, 不要应该也行
+        'z'      => 4623534287 // 随便打的, 不要应该也行
     );
     $sign_str = '';
     foreach ($data as $k => $v) {
