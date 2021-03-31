@@ -149,7 +149,7 @@ if (isset($_GET['newuser'])) {
             </td>
             <td>
                 <input type="text" class="form-control" name="ban_c" value="<?= isset($us['c']) ? $us["c"] : "" ?>"
-                       placeholder="请设置用户被封禁提示的内容（留空使用默认"您因为违反吧规，已被吧务封禁，如有疑问请联系吧务！"）">
+                       placeholder="请设置用户被封禁提示的内容（留空使用默认"您因为违反吧规，已被吧务封禁，如有疑问请联系吧务"）">
             </td>
         </tr>
         <tr>
@@ -218,7 +218,7 @@ if (isset($_GET['newuser'])) {
                             <td><a href="http://tieba.baidu.com/home/main/?ie=utf-8&un=<?= $r1['name'] ?>"
                                    target="_blank"><?= $r1['name'] ?></a></td>
                             <td><?= $r1['name_show'] ?></td>
-                            <td><a href="http://tieba.baidu.com/home/main/?ie=utf-8&id=<?= $r1['portrait'] ?>"
+                            <td style="line-break: anywhere;"><a href="http://tieba.baidu.com/home/main/?ie=utf-8&id=<?= $r1['portrait'] ?>"
                                    target="_blank"><?= $r1['portrait'] ?></a></td>
                             <td><?= date('Y-m-d', $r1['stime']) ?></td>
                             <td><?= date('Y-m-d', $r1['etime']) ?></td>
