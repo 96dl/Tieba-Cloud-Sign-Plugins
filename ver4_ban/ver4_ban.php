@@ -18,29 +18,31 @@ addAction('navi_7', 'ver4_ban_nav');
 /*
  * 执行封禁操作
  * */
-function ver4_ban($pid, $portrait, $tieba, $reason, int $day = 1)
+function ver4_ban($pid, $portrait, $name, $name_show, $tieba, $reason, int $day = 1)
 {
     $bduss = misc::getCookie($pid);
-    $r = empty($reason) ? '您因为违反吧规，已被吧务封禁，如有疑问请联系吧务！' : $reason;
-    $tl = new wcurl('http://c.tieba.baidu.com/c/c/bawu/commitprison');
+    $r = empty($reason) ? '您因为违反吧规，已被吧务封禁，如有疑问请联系吧务' : $reason;
+    $tl = new wcurl('https://tieba.baidu.com/pmc/blockid', [
+        'Connection: keep-alive',
+        'Accept: application/json, text/javascript, */*; q=0.01',
+        'Accept-Language: zh-CN,zh;q=0.9,en;q=0.8',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36',
+        'Content-Type: application/x-www-form-urlencoded; charset=UTF-8',
+        'Origin: https://tieba.baidu.com',
+        'Referer: https://tieba.baidu.com/',
+        'X-Requested-With: XMLHttpRequest',
+    ]);
     $data = array(
-        'BDUSS'  => $bduss,
-        'day'    => $day,//1 7 10//封禁时长
+        'day'    => $day, // 1 3 10 封禁时长
         'fid'    => misc::getFid($tieba),
-        'ntn'    => 'banid',
-        'portrait' => $portrait,
-        'reason' => $r,
         'tbs'    => misc::getTbs(0, $bduss),
-        'un'     => '',//$name,
-        'word'   => $tieba,
-        'z'      => 4623534287//随便打的, 不要应该也行
+        'ie'     => 'utf8',
+        'nick_name[]' => $name_show ?? '',
+        'pid'    => mt_rand(100000000000, 150000000000),
+        'reason' => $r
     );
-    $sign_str = '';
-    foreach ($data as $k => $v) {
-        $sign_str .= $k . '=' . $v;
-    }
-    $sign = strtoupper(md5($sign_str . 'tiebaclient!!!'));
-    $data['sign'] = $sign;
+    $tl->addCookie('BDUSS=' . $bduss);
+    $portrait !== null ? $data['portrait[]'] = $portrait : $data['user_name[]'] = $name;
     $tl->set(CURLOPT_RETURNTRANSFER, true);
     $rt = $tl->post($data);
     return $rt;
