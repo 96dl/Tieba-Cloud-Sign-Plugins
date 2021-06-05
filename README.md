@@ -8,7 +8,7 @@
 ```sql
 ALTER TABLE `tc_ver4_ban_list` CONVERT TO CHARACTER SET `utf8mb4` COLLATE `utf8mb4_general_ci`;
 ALTER TABLE `tc_ver4_ban_userset` CONVERT TO CHARACTER SET `utf8mb4` COLLATE `utf8mb4_general_ci`;
-ALTER TABLE `tc_ver4_ban_userset` CHANGE `c` `c` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL; 
+ALTER TABLE `tc_ver4_ban_userset` CHANGE `c` `c` TEXT CHARACTER SET `utf8mb4` COLLATE `utf8mb4_general_ci`; 
 ALTER TABLE `tc_ver4_ban_list`
   CHANGE `name` `name` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   CHANGE `tieba` `tieba` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
