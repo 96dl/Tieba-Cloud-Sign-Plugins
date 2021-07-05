@@ -11,7 +11,7 @@ $max = $m->fetch_array($m->query("SELECT max(id) AS `c` FROM `" . DB_NAME . "`.`
 if ($id < $max['c']) {
     $ls = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_list` WHERE `id` > {$id} AND {$sql} ORDER BY `id` ASC"));
     $us = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_ban_userset` WHERE `uid` = {$ls['uid']}"));
-    $re = ver4_ban($ls['pid'], $ls['portrait'], $ls['name'], $ls['name_show'], $ls['tieba'], $us['c']);
+    $re = ver4_ban_client($ls['pid'], $ls['portrait'], $ls['name'], $ls['tieba'], $us['c']);
     $re = json_decode($re, true);
     if (!$re['error_code']) {
         $con = $ls['log'] . date('Y-m-d H:i:s') . ' 执行结果：<font color="green">操作成功</font><br>';

@@ -5,7 +5,7 @@
 return array(
     'plugin' => array(
         'name'        => 'Ver4云封禁',            //插件名称，必填
-        'version'     => '1.1',                 //插件版本号
+        'version'     => '1.2',                 //插件版本号
         'description' => 'Ver4签到联盟贴吧云回复，提供高性能的贴吧云封禁',  //插件描述
         'onsale'      =>  false,                 //bool 插件是否已在产品中心上架
         'url'         => 'https://www.tbsign.cn/',  //插件地址，比如哪里可以下载到这个插件
