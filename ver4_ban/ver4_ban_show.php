@@ -552,18 +552,15 @@ if (isset($_GET['newuser'])) {
       $('#forum_name, #selectUserPid').bind('input propertychange', function(){
         if($("#forum_name").val() !== "" && $("#forum_name").val() !== form.fname){
             $('#forum_name_label').text("检查权限中")
-            let now = new Date();
-            if (now - time.forum_name_time > 1000) {//限流
-                $.get("index.php?plugin=ver4_ban&api&m=precheck&pid=" + $("#selectUserPid").val() + '&tieba=' + $("#forum_name").val(),function(data){
-                    if (data.data.isManager) {
-                        $('#forum_name_label').text("此帐号在" + $('#forum_name').val() + "吧为" + data.data.managerType)
-                    } else {
-                        $('#forum_name_label').text("此帐号在" + $('#forum_name').val() + "吧没有封禁权限")
-                    }
-                    $('#forum_name_label').css("display", "block")
-                })
-            }
-            time.forum_name_time = now
+            window.stop();
+            $.get("index.php?plugin=ver4_ban&api&m=precheck&pid=" + $("#selectUserPid").val() + '&tieba=' + $("#forum_name").val(),function(data){
+                if (data.data.isManager) {
+                    $('#forum_name_label').text("此帐号在" + $('#forum_name').val() + "吧为" + data.data.managerType)
+                } else {
+                    $('#forum_name_label').text("此帐号在" + $('#forum_name').val() + "吧没有封禁权限")
+                }
+                $('#forum_name_label').css("display", "block")
+            })
         } else if ($("#forum_name").val() === "") {
             $('#forum_name_label').css("display", "none")
         }
