@@ -541,7 +541,7 @@ if (isset($_GET['newuser'])) {
         if($(this).val() !== ""){
           $(this).val(Array.from(new Set($(this).val().split("\n").map(x => {
             x = x.replace(/@|\r/, "")
-            let testPortrait = /tb.1.[\w-~]{8}.[\w-~]{22}/.exec(x)//检测portrait
+            let testPortrait = /tb.1.[\w-~]{0,8}.[\w-~]{0,22}/.exec(x)//检测portrait
             if (testPortrait !== null) {
               x = testPortrait[0]
             }
