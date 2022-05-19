@@ -81,15 +81,16 @@ function ver4_ban_client ($pid, $portrait, $name, $tieba, $reason, int $day = 1)
 /**
  * 获取任职信息
  *
- * @param $bduss
+ * @param $pid
  * @param $tieba_name
  * @return bool|string
  */
-function ver4_get_manager_web_backstage(string $bduss, string $tieba_name)
+function ver4_get_manager_web_backstage($pid, string $tieba_name)
 {
+    $cookies = misc::getCookie($pid, true);
     try {
         $tl = new Wcurl('http://tieba.baidu.com/bawu2/platform/index?ie=utf-8&word=' . $tieba_name);
-        $tl->addCookie('BDUSS=' . $bduss);
+        $tl->addCookie('BDUSS=' . $cookies["bduss"] . ";STOKEN=" . $cookies["stoken"]);
         $tl->set(CURLOPT_RETURNTRANSFER, true);
         $tl->set(CURLOPT_CONNECTTIMEOUT, 3);
         $rt = $tl->get();
@@ -107,7 +108,7 @@ function ver4_get_manager_web_backstage(string $bduss, string $tieba_name)
 //某个pid下帐号是否为吧务
 function ver4_is_manager($pid, string $tieba_name): array {
     return [
-        "isManager" => (bool)preg_match('/<p class="forum_list_position">([^<]+)<\/p>/', ver4_get_manager_web_backstage(misc::getCookie($pid), $tieba_name), $managerType),
+        "isManager" => (bool)preg_match('/<p class="forum_list_position">([^<]+)<\/p>/', ver4_get_manager_web_backstage($pid, $tieba_name), $managerType),
         "managerType" => empty($managerType[1]) ? "" : $managerType[1],
     ];
 }

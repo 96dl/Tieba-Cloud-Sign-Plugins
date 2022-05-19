@@ -45,16 +45,14 @@ if (isset($_GET['newuser'])) {
     if (!is_array($ck) || empty($ck)) {
         redirect('index.php?plugin=ver4_rank&error=' . urlencode('数据非法，或者你没有选择名人，提交失败'));
     }
-
+	$list = json_decode(file_get_contents(PLUGIN_ROOT . '/ver4_rank/ver4_rank_list.json'), true);
     foreach ($ck as $v) {
-        $x = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_list` WHERE `id` = '{$v}'"));
-        if (!empty($x['name'])) {
-            $ux = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `pid` = '{$pid}' AND `name` = '{$x['name']}'"));
-            if (empty($ux['name'])) {
-                $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` (`uid`,`pid`,`fid`,`nid`,`name`,`tieba`,`date`) 
-			VALUES ({$uid},'{$pid}','{$x['fid']}','{$x['nid']}','{$x['name']}','{$x['tieba']}',0)");
+		if (isset($list[$v])) {
+			$ux = $m->fetch_array($m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` WHERE `pid` = '{$pid}' AND `name` = '{$list[$v]['name']}'"));
+			if (empty($ux['name'])) {
+                $m->query("INSERT INTO `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_log` (`uid`,`pid`,`fid`,`nid`,`name`,`tieba`,`date`) VALUES ({$uid},'{$pid}','{$list[$v]['fid']}','{$list[$v]['nid']}','{$list[$v]['name']}','{$list[$v]['tieba']}',0)");
             }
-        }
+		}
     }
     redirect('index.php?plugin=ver4_rank&success=' . urlencode('名人已成功添加！'));
 }
@@ -256,20 +254,20 @@ if (isset($_GET['error'])) {
 						</thead>
 						<tbody>
 						<?php
-                        $r = $m->query("SELECT * FROM `" . DB_NAME . "`.`" . DB_PREFIX . "ver4_rank_list`");
-                        while ($x = $m->fetch_array($r)) {
-                            ?>
+                        $r = json_decode(file_get_contents(PLUGIN_ROOT . '/ver4_rank/ver4_rank_list.json'), true);
+						foreach ($r as $id => $x) {
+							?>
 							<tr>
-								<td><?= $x['id'] ?></td>
+								<td><?= $id + 1 ?></td>
 								<td><a href="http://tieba.baidu.com/f?kw=<?= $x['tieba'] ?>"
 								       target="_blank"><?= $x['tieba'] ?></a></td>
 								<td><?= $x['name'] ?></td>
 								<td>
-									<input type="checkbox" name="check[]" value="<?= $x['id'] ?>">
+									<input type="checkbox" name="check[]" value="<?= $id ?>">
 								</td>
 							</tr>
 							<?php
-                        }
+						}
                         ?>
 						</tbody>
 					</table>
