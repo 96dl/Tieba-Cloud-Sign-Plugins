@@ -4,7 +4,11 @@
 ### 云封禁
 吧务专用，可循环封禁指定账号
 
-**更新1.1版后请执行**
+**更新1.3版相关**
+
+此版本需要用到 `STOKEN`，由于云签本体 `v4.98` 并不强制要求 `STOKEN`，请注意及时更新自己绑定的百度帐号的 `BDUSS` 以及 `STOKEN`
+
+**更新到1.1版或更高版本请执行**
 ```sql
 ALTER TABLE `tc_ver4_ban_list` CONVERT TO CHARACTER SET `utf8mb4` COLLATE `utf8mb4_general_ci`;
 ALTER TABLE `tc_ver4_ban_userset` CONVERT TO CHARACTER SET `utf8mb4` COLLATE `utf8mb4_general_ci`;
@@ -27,6 +31,10 @@ UPDATE `tc_ver4_ban_list` SET `log` = REPLACE(`log`, "<br>", "<br>\n");
 
 ### 名人堂
 每日自动助攻贴吧名人堂
+
+**更新1.2版本相关**
+
+已不再使用 `tc_ver4_rank_list` 这个表，故不需要执行1.1部分（下面几行）的内容；（对网站管理者）基于同样的理由请务必前往主程序的**计划任务**面板删除掉名为 `ver4_rank_daily` 的任务，否则计划任务会因需要的文件不存在而执行出错
 
 **更新1.1版后请执行**
 ```sql

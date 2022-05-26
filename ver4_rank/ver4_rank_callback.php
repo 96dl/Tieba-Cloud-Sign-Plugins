@@ -9,17 +9,6 @@ function callback_install()
     //在这里做点事
     global $m;
     $m->query("
-		CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ver4_rank_list` (
-		  `id` int(10) NOT NULL AUTO_INCREMENT,
-		  `fid` int(10) NOT NULL,
-		  `nid` varchar(15) NOT NULL,
-		  `name` varchar(255) NOT NULL,
-		  `tieba` varchar(255) NOT NULL,
-		  `date` int(10) NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
-	");
-    $m->query("
 		CREATE TABLE IF NOT EXISTS `".DB_PREFIX."ver4_rank_log` (
 		  `id` int(10) NOT NULL AUTO_INCREMENT,
 		  `uid` int(10) NOT NULL,
@@ -41,8 +30,6 @@ function callback_install()
 function callback_init()
 {
     option::set('ver4_rank_id', 0);
-    option::set('ver4_rank_daily', 0);
-    cron::set('ver4_rank_daily', 'plugins/ver4_rank/cron/daily.php', 0, 0, 0);
     cron::set('ver4_rank_dorank', 'plugins/ver4_rank/cron/dopost.php', 0, 0, 0);
 }
 
@@ -52,8 +39,6 @@ function callback_init()
 function callback_inactive()
 {
     option::del('ver4_rank_id');
-    option::del('ver4_rank_daily');
-    cron::del('ver4_rank_daily');
     cron::del('ver4_rank_dorank');
 }
 
@@ -65,7 +50,6 @@ function callback_remove()
 {
     //在这里做点事
     global $m;
-    $m->query("DROP TABLE IF EXISTS `".DB_PREFIX."ver4_rank_list`");
     $m->query("DROP TABLE IF EXISTS `".DB_PREFIX."ver4_rank_log`");
 }
 
