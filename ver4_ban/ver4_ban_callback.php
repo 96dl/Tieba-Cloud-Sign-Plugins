@@ -40,6 +40,7 @@ function callback_init()
 {
     option::set('ver4_ban_id', 0);
     option::set('ver4_ban_limit', 20);
+    option::set('ver4_ban_break_check', '0');
     cron::set('ver4_ban_dopost', 'plugins/ver4_ban/cron/dopost.php', 0, 0, 0);
 }
 
@@ -50,6 +51,7 @@ function callback_inactive()
 {
     option::del('ver4_ban_id');
     option::del('ver4_ban_limit');
+    option::del('ver4_ban_break_check');
     cron::del('ver4_ban_dopost');
 }
 
