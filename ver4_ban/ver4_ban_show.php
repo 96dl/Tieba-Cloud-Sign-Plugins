@@ -40,7 +40,7 @@ if (isset($_GET["api"])) {
                 $tieba = isset($_POST['tieba']) ? sqladds($_POST['tieba']) : '';
             
                 //判定吧务权限
-                if (!ver4_is_manager($pid, $tieba)["isManager"]) {
+                if (option::get('ver4_ban_break_check') === '0' && !ver4_is_manager($pid, $tieba)["isManager"]) {
                     $apiReturnArray["message"] = "您不是 {$tieba}吧 的吧务";
                 }
             
@@ -156,7 +156,7 @@ if (isset($_GET["api"])) {
             case "precheck":
                 $apiReturnArray["code"] = 200;
                 $apiReturnArray["message"] = "成功";
-                $apiReturnArray["data"] = ver4_is_manager(isset($_GET["pid"]) ? $_GET["pid"] : "", isset($_GET["tieba"]) ? $_GET["tieba"] : "");
+                $apiReturnArray["data"] = option::get('ver4_ban_break_check') === '1' ? ["isManager" => false, "isBreak" => true] : ver4_is_manager(isset($_GET["pid"]) ? $_GET["pid"] : "", isset($_GET["tieba"]) ? $_GET["tieba"] : "");
                 break;
         }
     }
@@ -219,7 +219,7 @@ if (isset($_GET['newuser'])) {
     $tieba = isset($_POST['tieba']) ? sqladds($_POST['tieba']) : '';
 
     //判定吧务权限
-    if (!ver4_is_manager($pid, $tieba)["isManager"]) {
+    if (option::get('ver4_ban_break_check') === '0' && !ver4_is_manager($pid, $tieba)["isManager"]) {
         redirect('index.php?plugin=ver4_ban&error=' . urlencode("您不是 {$tieba}吧 的吧务"));
     }
 
@@ -419,8 +419,8 @@ if (isset($_GET['newuser'])) {
         <?php } ?>
     </div>
 </div>
-<a class="btn btn-success" href="javascript:;" data-toggle="modal" data-target="#AddUser">添加用户</a>
-<a class="btn btn-danger" href="javascript:;" data-toggle="modal" data-target="#DelUser">清空列表</a>
+<span class="btn btn-success" data-toggle="modal" data-target="#AddUser" style="sursor: pointer">添加用户</span>
+<span class="btn btn-danger" data-toggle="modal" data-target="#DelUser" style="sursor: pointer">清空列表</span>
 <hr>
 
 
@@ -556,6 +556,8 @@ if (isset($_GET['newuser'])) {
             $.get("index.php?plugin=ver4_ban&api&m=precheck&pid=" + $("#selectUserPid").val() + '&tieba=' + $("#forum_name").val(),function(data){
                 if (data.data.isManager) {
                     $('#forum_name_label').text("此帐号在" + $('#forum_name').val() + "吧为" + data.data.managerType)
+                } else if(data.data.isBreak) {
+                    $('#forum_name_label').text("已跳过权限检查")
                 } else {
                     $('#forum_name_label').text("此帐号在" + $('#forum_name').val() + "吧没有封禁权限")
                 }
